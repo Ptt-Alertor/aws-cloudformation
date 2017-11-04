@@ -1,0 +1,12 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Production Certificate Manager",
+  "Resources": {
+    "dinolaicomCert": {
+      "Type": "AWS::CertificateManager::Certificate",
+      "Properties": {
+        "DomainName": "*.dinolai.com"
+      }
+    }
+  }
+}
