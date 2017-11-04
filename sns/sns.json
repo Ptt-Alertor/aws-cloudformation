@@ -1,0 +1,37 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Production Simple Notification Service",
+    "Resources": {
+        "DinoLaiSubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Properties": {
+                "Endpoint": "dinos80152@gmail.com",
+                "Protocol": "email",
+                "TopicArn": {
+                    "Ref": "PttAlertorSNSTopic"
+                }
+            }
+        },
+        "LiamLaiSubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Properties": {
+                "Endpoint": "liam.icheng.lai@gmail.com",
+                "Protocol": "email",
+                "TopicArn": {
+                    "Ref": "PttAlertorSNSTopic"
+                }
+            }
+        },
+        "PttAlertorSNSTopic": {
+            "Type": "AWS::SNS::Topic",
+            "Properties": {
+                "DisplayName": "PttAlertor",
+                "Subscription": [
+                    {"Endpoint": "dinos80152@gmail.com", "Protocol": "email"},
+                    {"Endpoint": "liam.icheng.lai@gmail.com", "Protocol": "email"}
+                ],
+                "TopicName": "Ptt-Alertor-Alarm"
+            }
+        }
+    }
+}
