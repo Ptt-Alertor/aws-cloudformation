@@ -1,0 +1,23 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Production Simple Storage Service",
+    "Resources": {
+        "PttAlertorS3Bucket": {
+            "Type": "AWS::S3::Bucket",
+            "Properties": {
+                "BucketName": "ptt-alertor-2-bucket",
+                "VersioningConfiguration": { "Status": "Enabled" }
+            }
+        }
+    },
+    "Outputs": {
+        "Arn": {
+            "Value": { "Fn::GetAtt": [ "PttAlertorS3Bucket", "Arn" ] },
+            "Description": "Arn of ptt-alertor-2-bucket"
+        },
+        "DomainName": {
+            "Value": { "Fn::GetAtt": [ "PttAlertorS3Bucket", "DomainName" ] },
+            "Description": "Domain Name of ptt-alertor-2-bucket"
+        }
+    }
+}
