@@ -1,0 +1,10 @@
+#!/bin/bash
+
+config_bucket=%{config_bucket}
+echo ECS_CLUSTER=%{cluster_name} > /etc/ecs/ecs.config
+mkdir /etc/ecs/config
+yum install -y aws-cli
+aws s3 cp s3://$config_bucket/config/redis.json /etc/ecs/config/
+aws s3 cp s3://$config_bucket/config/mailgun.json /etc/ecs/config/
+aws s3 cp s3://$config_bucket/config/auth.json /etc/ecs/config/
+yum update -y

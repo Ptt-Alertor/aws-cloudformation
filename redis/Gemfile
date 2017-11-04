@@ -1,0 +1,12 @@
+source 'https://rubygems.org'
+
+# Handy local-work dependency (to keep for debugging)
+#gem 'deployment_libraries', :path => '../../../../../deployment-libraries'
+
+gem 'deployment_libraries', :git => 'https://5ca062ce4d19b1f09774a4934c3bde9fd18c6558:x-oauth-basic@github.com/TabDigital/deployment-libraries.git', :tag => '2fd281242b46d492d8a94495559291adf8fca64d'
+gem 'deployment_library_validations', :git => 'https://5ca062ce4d19b1f09774a4934c3bde9fd18c6558:x-oauth-basic@github.com/TabDigital/deployment-libraries.git', :tag => '2fd281242b46d492d8a94495559291adf8fca64d'
+
+group :development do
+  gem 'pry'
+  gem 'pry-nav'
+end

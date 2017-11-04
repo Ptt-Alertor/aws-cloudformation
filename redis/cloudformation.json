@@ -1,0 +1,134 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Production Redis",
+  "Resources": {
+    "SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "Allow VPC Access for Redis",
+        "VpcId": {
+          "Fn::ImportValue": {
+            "Fn::Sub": "Production-VPC-VpcId"
+          }
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "Production-VPC-VpcCIDR"
+              }
+            }
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "6379",
+            "ToPort": "6379",
+            "CidrIp": {
+              "Fn::ImportValue": {
+                "Fn::Sub": "Production-VPC-VpcCIDR"
+              }
+            }
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "Production-Redis-sg"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "SubnetGroup": {
+      "Type": "AWS::ElastiCache::SubnetGroup",
+      "Properties": {
+        "Description": "Redis SubnetGroup",
+        "SubnetIds": [
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet"
+            }
+          }
+        ]
+      }
+    },
+    "Redis": {
+      "Type": "AWS::ElastiCache::CacheCluster",
+      "Properties": {
+        "AutoMinorVersionUpgrade": true,
+        "AZMode": "single-az",
+        "CacheNodeType": "cache.t2.micro",
+        "CacheSubnetGroupName": {
+          "Ref": "SubnetGroup"
+        },
+        "Engine": "redis",
+        "EngineVersion": "3.2.6",
+        "NumCacheNodes": "1",
+        "Port": "6379",
+        "PreferredMaintenanceWindow": "sun:05:00-sun:09:00",
+        "VpcSecurityGroupIds": [
+          {
+            "Ref": "SecurityGroup"
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "RedisEndPoint": {
+      "Value": {
+        "Fn::GetAtt": [
+          "Redis",
+          "RedisEndpoint.Address"
+        ]
+      },
+      "Description": "Redis Endpoint",
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-EndPoint"
+            ]
+          ]
+        }
+      }
+    },
+    "RedisPort": {
+      "Value": {
+        "Fn::GetAtt": [
+          "Redis",
+          "RedisEndpoint.Port"
+        ]
+      },
+      "Description": "Redis Port",
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-Port"
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

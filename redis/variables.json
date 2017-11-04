@@ -1,0 +1,16 @@
+{
+  "app": "Redis",
+  "RedisPort": "6379",
+  "Production": {
+    "AZMode": "single-az",
+    "PreferredAvailabilityZone": "us-west-2a",
+    "CacheNodeType": "cache.t2.micro",
+    "PreferredMaintenanceWindow": "sun:05:00-sun:09:00",
+    "EngineVersion": "3.2.6",
+    "NumCacheNodes": "1",
+    "Stack": {
+      "VPC": "Production-VPC"
+    },
+    "cloudFormation": {}
+  }
+}

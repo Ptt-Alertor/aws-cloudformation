@@ -1,0 +1,195 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Production ECS Host",
+  "Resources": {
+    "SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "EC2 security group for docker deployment",
+        "VpcId": {
+          "Fn::ImportValue": {
+            "Fn::Sub": "Production-VPC-VpcId"
+          }
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "1",
+            "ToPort": "65535",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "CidrIp": "0.0.0.0/0"
+          },
+          {
+            "IpProtocol": "udp",
+            "FromPort": "0",
+            "ToPort": "65535",
+            "CidrIp": "0.0.0.0/0"
+          }
+        ]
+      }
+    },
+    "InstanceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Version": "2012-10-17",
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ec2.amazonaws.com"
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "s3ConfigReadAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "s3:GetObject",
+                    "s3:ListBucket"
+                  ],
+                  "Resource": [
+                    "arn:aws:s3:::ptt-alertor-bucket",
+                    "arn:aws:s3:::ptt-alertor-bucket/*"
+                  ],
+                  "Sid": "ConfigReadAccess"
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "ecsAccess",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "ecs:*",
+                    "ecr:*",
+                    "logs:CreateLogStream",
+                    "logs:PutLogEvents"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "IamInstanceProfile": {
+      "Type": "AWS::IAM::InstanceProfile",
+      "Properties": {
+        "Path": "/",
+        "Roles": [
+          {
+            "Ref": "InstanceRole"
+          }
+        ]
+      }
+    },
+    "LaunchConfiguration": {
+      "Type": "AWS::AutoScaling::LaunchConfiguration",
+      "Properties": {
+        "ImageId": "ami-29f80351",
+        "InstanceType": "t2.micro",
+        "KeyName": "ecs",
+        "SecurityGroups": [
+          {
+            "Ref": "SecurityGroup"
+          }
+        ],
+        "AssociatePublicIpAddress": true,
+        "IamInstanceProfile": {
+          "Ref": "IamInstanceProfile"
+        },
+        "UserData": {
+          "Fn::Base64": {
+            "Fn::Join": [
+              "",
+              [
+                "#!/bin/bash\n\nconfig_bucket=",
+                "ptt-alertor-bucket",
+                "\necho ECS_CLUSTER=",
+                {
+                  "Fn::ImportValue": {
+                    "Fn::Sub": "Production-ECS-Cluster"
+                  }
+                },
+                " > /etc/ecs/ecs.config\nmkdir /etc/ecs/config\nyum install -y aws-cli\naws s3 cp s3://$config_bucket/config/redis.json /etc/ecs/config/\naws s3 cp s3://$config_bucket/config/mailgun.json /etc/ecs/config/\naws s3 cp s3://$config_bucket/config/auth.json /etc/ecs/config/\nyum update -y"
+              ]
+            ]
+          }
+        }
+      }
+    },
+    "AutoScalingGroup": {
+      "Type": "AWS::AutoScaling::AutoScalingGroup",
+      "Properties": {
+        "LaunchConfigurationName": {
+          "Ref": "LaunchConfiguration"
+        },
+        "AvailabilityZones": [
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-AvailabilityZone"
+            }
+          }
+        ],
+        "VPCZoneIdentifier": [
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet"
+            }
+          }
+        ],
+        "MaxSize": 2,
+        "MinSize": 1,
+        "DesiredCapacity": 1,
+        "HealthCheckGracePeriod": 30,
+        "HealthCheckType": "EC2",
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "Production",
+                  "-ECS-host"
+                ]
+              ]
+            },
+            "PropagateAtLaunch": true
+          },
+          {
+            "Key": "ImageId",
+            "Value": "ami-29f80351",
+            "PropagateAtLaunch": true
+          }
+        ],
+        "TerminationPolicies": [
+          "OldestInstance"
+        ]
+      }
+    }
+  }
+}
