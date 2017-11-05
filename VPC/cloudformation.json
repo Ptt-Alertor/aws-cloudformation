@@ -54,6 +54,38 @@
         ]
       }
     },
+    "PublicSubnetB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-west-2b",
+        "CidrBlock": "172.31.16.0/20",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Production-PublicSubnet"
+          }
+        ]
+      }
+    },
+    "PublicSubnetC": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-west-2c",
+        "CidrBlock": "172.31.32.0/20",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Production-PublicSubnet"
+          }
+        ]
+      }
+    },
     "PublicSubnetRT": {
       "Type": "AWS::EC2::RouteTable",
       "Properties": {
@@ -76,6 +108,28 @@
         },
         "SubnetId": {
           "Ref": "PublicSubnet"
+        }
+      }
+    },
+    "PublicSubnetRouteAssociationB": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicSubnetRT"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnetB"
+        }
+      }
+    },
+    "PublicSubnetRouteAssociationC": {
+      "Type": "AWS::EC2::SubnetRouteTableAssociation",
+      "Properties": {
+        "RouteTableId": {
+          "Ref": "PublicSubnetRT"
+        },
+        "SubnetId": {
+          "Ref": "PublicSubnetC"
         }
       }
     },
