@@ -1,12 +1,21 @@
 {
-  "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "Production Certificate Manager",
-  "Resources": {
-    "dinolaicomCert": {
-      "Type": "AWS::CertificateManager::Certificate",
-      "Properties": {
-        "DomainName": "*.dinolai.com"
-      }
-    }
-  }
+	"AWSTemplateFormatVersion": "2010-09-09",
+	"Description": "Production Certificate Manager",
+	"Resources": {
+		"dinolaicomCert": {
+			"Type": "AWS::CertificateManager::Certificate",
+			"Properties": {
+				"DomainName": "*.dinolai.com"
+			}
+		}
+	},
+	"Outputs": {
+		"dinolaicomCertArn": {
+			"Value": { "Ref": "dinolaicomCert"},
+			"Description": "Arn of *.dinolai.com certificate",
+			"Export": {
+				"Name": "Production-DinoLai-Cert-Arn"
+			}
+		}
+	}
 }

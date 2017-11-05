@@ -12,6 +12,23 @@
     redis-dump -h {redis_endpoint} > mydb.dump.txt
     ```
 
+1. replace unicode to char
+    1. replace `\\u0026` to `&`
+    1. replace `\\u003c` to `<`
+    1. replace `\\u003e` to `>`
+    1. replace `\u0026` to `&`
+    1. replace `\u003c` to `<`
+    1. replace `\u003e` to `>`
+
+    ```bash
+    sed -i 's/\\\\u0026/\&/g' mydb.dump.txt
+    sed -i 's/\\\\u003c/</g' mydb.dump.txt
+    sed -i 's/\\\\u003e/>/g' mydb.dump.txt
+    sed -i 's/\\u0026/\&/g' mydb.dump.txt
+    sed -i 's/\\u003c/</g' mydb.dump.txt
+    sed -i 's/\\u003e/>/g' mydb.dump.txt
+    ```
+
 1. copy file to new ec2 host
 
     ```bash

@@ -1,0 +1,65 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "Production CloudWatch Alarm and Dashboard",
+    "Resources": {
+        "PttAlertorCPUAlarm": {
+            "Type" : "AWS::CloudWatch::Alarm",
+            "Properties" : {
+                "ActionsEnabled" : true,
+                "AlarmName" : "Ptt Alertor CPU Utilization",
+                "AlarmDescription" : "Unexpected of CPU utilization",
+                "Namespace" : "AWS/ECS",
+                "Dimensions" : [
+                    {
+                        "Name": "ClusterName",
+                        "Value": { "Fn::ImportValue": "Production-ECS-Cluster" }
+                    },
+                    {
+                        "Name": "ServiceName",
+                        "Value": { "Fn::ImportValue": "Production-ECS-Service-Name"}
+                    }
+                ],
+                "MetricName" : "CPUUtilization",
+                "Period" : 300,
+                "Statistic" : "Average",
+                "ComparisonOperator" : "GreaterThanThreshold",
+                "Threshold" : 80,
+                "EvaluationPeriods" : 1,
+                "TreatMissingData" : "breaching",
+                "Unit" : "Percent",
+                "AlarmActions" : [
+                    { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
+                ],
+                "OKActions" : [
+                    { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
+                ]
+            }
+        },
+        "PttAlertorMemoryAlarm": {
+            "Type" : "AWS::CloudWatch::Alarm",
+            "Properties" : {
+                "ActionsEnabled" : true,
+                "AlarmName" : "Ptt Alertor Memory Reservation",
+                "AlarmDescription" : "memory not enough",
+                "Namespace" : "AWS/ECS",
+                "Dimensions" : [
+                    {
+                        "Name": "ClusterName",
+                        "Value": { "Fn::ImportValue": "Production-ECS-Cluster" }
+                    }
+                ],
+                "MetricName" : "MemoryReservation",
+                "Period" : 60,
+                "Statistic" : "Maximum",
+                "ComparisonOperator" : "LessThanThreshold",
+                "Threshold" : 20,
+                "EvaluationPeriods" : 1,
+                "TreatMissingData" : "breaching",
+                "Unit" : "Percent",
+                "AlarmActions" : [
+                    { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
+                ]
+            }
+        }
+    }
+}

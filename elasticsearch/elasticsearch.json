@@ -94,7 +94,7 @@
 					"Variables" : { "ELASTICSEARCH_ENDPOINT" : { "Fn::GetAtt" : ["PttAlertorElasticsearch", "DomainEndpoint"] } }
 				},
 				"FunctionName" : "Delete_ES_Indice",
-				"Handler" : "lambda_function.lambda_handler",
+				"Handler" : "delete_elasticsearch_indice.lambda_handler",
 				"Role" : { "Fn::GetAtt" : ["LambdaBasicExecutionRole", "Arn"] },
 				"Runtime" : "python3.6",
 				"Timeout" : 30
