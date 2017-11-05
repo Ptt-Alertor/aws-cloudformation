@@ -57,7 +57,17 @@
         "SubnetIds": [
           {
             "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet"
+              "Fn::Sub": "Production-VPC-PublicSubnet-A"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-B"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-C"
             }
           }
         ]

@@ -5,8 +5,7 @@
     "MinSize": 1,
     "DesiredCapacity": 1,
     "KeyName": "ecs",
-    "ConfigBucket": "ptt-alertor-bucket",
-    "ExtraS3Buckets": ["sunbets-uat-secret-keys"],
+    "ConfigBucket": "ptt-alertor-2-bucket",
     "ImageId": "ami-29f80351",
     "InstanceType": "t2.micro",
     "Stack": {

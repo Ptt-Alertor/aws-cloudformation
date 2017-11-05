@@ -66,8 +66,8 @@
                     "s3:ListBucket"
                   ],
                   "Resource": [
-                    "arn:aws:s3:::ptt-alertor-bucket",
-                    "arn:aws:s3:::ptt-alertor-bucket/*"
+                    "arn:aws:s3:::ptt-alertor-2-bucket",
+                    "arn:aws:s3:::ptt-alertor-2-bucket/*"
                   ],
                   "Sid": "ConfigReadAccess"
                 }
@@ -127,14 +127,14 @@
               "",
               [
                 "#!/bin/bash\n\nconfig_bucket=",
-                "ptt-alertor-bucket",
+                "ptt-alertor-2-bucket",
                 "\necho ECS_CLUSTER=",
                 {
                   "Fn::ImportValue": {
                     "Fn::Sub": "Production-ECS-Cluster"
                   }
                 },
-                " > /etc/ecs/ecs.config\nmkdir /etc/ecs/config\nyum install -y aws-cli\naws s3 cp s3://$config_bucket/config/redis.json /etc/ecs/config/\naws s3 cp s3://$config_bucket/config/mailgun.json /etc/ecs/config/\naws s3 cp s3://$config_bucket/config/auth.json /etc/ecs/config/\nyum update -y"
+                " > /etc/ecs/ecs.config\nmkdir /etc/ecs/config\nyum install -y aws-cli\naws s3 cp s3://$config_bucket/config/ /etc/ecs/config/ --recursive\n\nyum update -y\nyum install -y gcc-c++ make\ncurl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -\nyum install -y nodejs\n\nyum install -y wget \nwget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make\nnpm install redis-dump -g"
               ]
             ]
           }
@@ -150,14 +150,34 @@
         "AvailabilityZones": [
           {
             "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-AvailabilityZone"
+              "Fn::Sub": "Production-VPC-AvailabilityZone-A"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-AvailabilityZone-B"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-AvailabilityZone-C"
             }
           }
         ],
         "VPCZoneIdentifier": [
           {
             "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet"
+              "Fn::Sub": "Production-VPC-PublicSubnet-A"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-B"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-C"
             }
           }
         ],

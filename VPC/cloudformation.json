@@ -38,53 +38,18 @@
         }
       }
     },
-    "PublicSubnet": {
-      "Type": "AWS::EC2::Subnet",
+    "PublicSubnetRoute": {
+      "Type": "AWS::EC2::Route",
       "Properties": {
-        "AvailabilityZone": "us-west-2a",
-        "CidrBlock": "172.31.0.0/20",
-        "VpcId": {
-          "Ref": "VPC"
+        "DestinationCidrBlock": "0.0.0.0/0",
+        "GatewayId": {
+          "Ref": "InternetGateway"
         },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "Production-PublicSubnet"
-          }
-        ]
-      }
-    },
-    "PublicSubnetB": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "AvailabilityZone": "us-west-2b",
-        "CidrBlock": "172.31.16.0/20",
-        "VpcId": {
-          "Ref": "VPC"
-        },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "Production-PublicSubnet"
-          }
-        ]
-      }
-    },
-    "PublicSubnetC": {
-      "Type": "AWS::EC2::Subnet",
-      "Properties": {
-        "AvailabilityZone": "us-west-2c",
-        "CidrBlock": "172.31.32.0/20",
-        "VpcId": {
-          "Ref": "VPC"
-        },
-        "Tags": [
-          {
-            "Key": "Name",
-            "Value": "Production-PublicSubnet"
-          }
-        ]
-      }
+        "RouteTableId": {
+          "Ref": "PublicSubnetRT"
+        }
+      },
+      "DependsOn": "VPCGatewayAttachment"
     },
     "PublicSubnetRT": {
       "Type": "AWS::EC2::RouteTable",
@@ -100,15 +65,47 @@
         ]
       }
     },
-    "PublicSubnetRouteAssociation": {
+    "PublicSubnetA": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-west-2a",
+        "CidrBlock": "172.31.0.0/20",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Production-PublicSubnet-A"
+          }
+        ]
+      }
+    },
+    "PublicSubnetRouteAssociationA": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
         "RouteTableId": {
           "Ref": "PublicSubnetRT"
         },
         "SubnetId": {
-          "Ref": "PublicSubnet"
+          "Ref": "PublicSubnetA"
         }
+      }
+    },
+    "PublicSubnetB": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-west-2b",
+        "CidrBlock": "172.31.16.0/20",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Production-PublicSubnet-B"
+          }
+        ]
       }
     },
     "PublicSubnetRouteAssociationB": {
@@ -122,6 +119,22 @@
         }
       }
     },
+    "PublicSubnetC": {
+      "Type": "AWS::EC2::Subnet",
+      "Properties": {
+        "AvailabilityZone": "us-west-2c",
+        "CidrBlock": "172.31.32.0/20",
+        "VpcId": {
+          "Ref": "VPC"
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": "Production-PublicSubnet-C"
+          }
+        ]
+      }
+    },
     "PublicSubnetRouteAssociationC": {
       "Type": "AWS::EC2::SubnetRouteTableAssociation",
       "Properties": {
@@ -132,26 +145,13 @@
           "Ref": "PublicSubnetC"
         }
       }
-    },
-    "PublicSubnetRoute": {
-      "Type": "AWS::EC2::Route",
-      "Properties": {
-        "DestinationCidrBlock": "0.0.0.0/0",
-        "GatewayId": {
-          "Ref": "InternetGateway"
-        },
-        "RouteTableId": {
-          "Ref": "PublicSubnetRT"
-        }
-      },
-      "DependsOn": "VPCGatewayAttachment"
     }
   },
   "Outputs": {
-    "PublicSubnet": {
+    "PublicSubnetA": {
       "Description": "PublicSubnet",
       "Value": {
-        "Ref": "PublicSubnet"
+        "Ref": "PublicSubnetA"
       },
       "Export": {
         "Name": {
@@ -161,13 +161,13 @@
               {
                 "Ref": "AWS::StackName"
               },
-              "-PublicSubnet"
+              "-PublicSubnet-A"
             ]
           ]
         }
       }
     },
-    "AvailabilityZone": {
+    "AvailabilityZoneA": {
       "Description": "AvailabilityZone",
       "Value": "us-west-2a",
       "Export": {
@@ -178,7 +178,79 @@
               {
                 "Ref": "AWS::StackName"
               },
-              "-AvailabilityZone"
+              "-AvailabilityZone-A"
+            ]
+          ]
+        }
+      }
+    },
+    "PublicSubnetB": {
+      "Description": "PublicSubnet",
+      "Value": {
+        "Ref": "PublicSubnetB"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-PublicSubnet-B"
+            ]
+          ]
+        }
+      }
+    },
+    "AvailabilityZoneB": {
+      "Description": "AvailabilityZone",
+      "Value": "us-west-2b",
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-AvailabilityZone-B"
+            ]
+          ]
+        }
+      }
+    },
+    "PublicSubnetC": {
+      "Description": "PublicSubnet",
+      "Value": {
+        "Ref": "PublicSubnetC"
+      },
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-PublicSubnet-C"
+            ]
+          ]
+        }
+      }
+    },
+    "AvailabilityZoneC": {
+      "Description": "AvailabilityZone",
+      "Value": "us-west-2c",
+      "Export": {
+        "Name": {
+          "Fn::Join": [
+            "",
+            [
+              {
+                "Ref": "AWS::StackName"
+              },
+              "-AvailabilityZone-C"
             ]
           ]
         }

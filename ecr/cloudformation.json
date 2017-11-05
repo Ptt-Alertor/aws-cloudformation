@@ -1,0 +1,12 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "ECS Service ",
+  "Resources": {
+    "ECR": {
+      "Type" : "AWS::ECR::Repository",
+      "Properties" : {
+        "RepositoryName" : "ptt-alertor-repo"
+      }
+    }
+  }
+}

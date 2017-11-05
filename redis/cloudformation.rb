@@ -41,7 +41,11 @@ CloudFormation {
   Resource('SubnetGroup') {
     Type "AWS::ElastiCache::SubnetGroup"
     Property 'Description', 'Redis SubnetGroup'
-    Property 'SubnetIds', [ FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet")) ]
+    Property 'SubnetIds', [ 
+      FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-A")),
+      FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-B")),
+      FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-C"))
+    ]
   }
 
   Resource('Redis') {

@@ -107,8 +107,16 @@ CloudFormation {
   Resource('AutoScalingGroup') {
     Type 'AWS::AutoScaling::AutoScalingGroup'
     Property 'LaunchConfigurationName', Ref('LaunchConfiguration')
-    Property 'AvailabilityZones', [ FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone")) ]
-    Property 'VPCZoneIdentifier', [ FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet")) ]
+    Property 'AvailabilityZones', [ 
+      FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-A")), 
+      FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-B")),
+      FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-C"))
+    ]
+    Property 'VPCZoneIdentifier', [
+      FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-A")),
+      FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-B")),
+      FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-C"))
+    ]
     Property 'MaxSize', mapping['MaxSize']
     Property 'MinSize', mapping['MinSize']
     Property 'DesiredCapacity', mapping['DesiredCapacity']

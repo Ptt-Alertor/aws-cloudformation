@@ -31,16 +31,14 @@ CloudFormation {
     Property "InternetGatewayId", Ref("InternetGateway")
   }
 
-  Resource("PublicSubnet") {
-    Type "AWS::EC2::Subnet"
-    Property "AvailabilityZone", mappings["AvailabilityZone"]
-    Property "CidrBlock", mappings["PublicCIDR"]
-    Property "VpcId", Ref("VPC")
-    Property "Tags", [{
-      Key: "Name",
-      Value: "#{environment}-PublicSubnet",
-    }]
+  Resource("PublicSubnetRoute") {
+    Type "AWS::EC2::Route"
+    DependsOn "VPCGatewayAttachment"
+    Property "DestinationCidrBlock", "0.0.0.0/0"
+    Property "GatewayId", Ref("InternetGateway")
+    Property "RouteTableId", Ref("PublicSubnetRT")
   }
+
   Resource("PublicSubnetRT") {
     Type "AWS::EC2::RouteTable"
     Property "VpcId", Ref("VPC")
@@ -50,31 +48,37 @@ CloudFormation {
     }]
   }
 
-  Resource("PublicSubnetRouteAssociation") {
-    Type "AWS::EC2::SubnetRouteTableAssociation"
-    Property "RouteTableId", Ref("PublicSubnetRT")
-    Property "SubnetId", Ref("PublicSubnet")
-  }
+  mappings['Sunbets'].each do |key, zone|
 
-  Resource("PublicSubnetRoute") {
-    Type "AWS::EC2::Route"
-    DependsOn "VPCGatewayAttachment"
-    Property "DestinationCidrBlock", "0.0.0.0/0"
-    Property "GatewayId", Ref("InternetGateway")
-    Property "RouteTableId", Ref("PublicSubnetRT")
-  }
+    Resource("PublicSubnet#{key}") {
+      Type "AWS::EC2::Subnet"
+      Property "AvailabilityZone", zone["AvailabilityZone"]
+      Property "CidrBlock", zone["PublicCIDR"]
+      Property "VpcId", Ref("VPC")
+      Property "Tags", [{
+        Key: "Name",
+        Value: "#{environment}-PublicSubnet-#{key}",
+      }]
+    }
 
-  Output("PublicSubnet") {
-    Description "PublicSubnet"
-    Value Ref("PublicSubnet")
-    Export FnJoin("", [Ref("AWS::StackName"), "-PublicSubnet"])
-  }
+    Resource("PublicSubnetRouteAssociation#{key}") {
+      Type "AWS::EC2::SubnetRouteTableAssociation"
+      Property "RouteTableId", Ref("PublicSubnetRT")
+      Property "SubnetId", Ref("PublicSubnet#{key}")
+    }
 
-  Output("AvailabilityZone") {
-    Description "AvailabilityZone"
-    Value mappings['AvailabilityZone']
-    Export FnJoin("", [Ref("AWS::StackName"), "-AvailabilityZone"])
-  }
+    Output("PublicSubnet#{key}") {
+      Description "PublicSubnet"
+      Value Ref("PublicSubnet#{key}")
+      Export FnJoin("", [Ref("AWS::StackName"), "-PublicSubnet-#{key}"])
+    }
+
+    Output("AvailabilityZone#{key}") {
+      Description "AvailabilityZone"
+      Value zone['AvailabilityZone']
+      Export FnJoin("", [Ref("AWS::StackName"), "-AvailabilityZone-#{key}"])
+    }
+  end
 
   Output('Region') {
     Description "Region"
@@ -86,6 +90,7 @@ CloudFormation {
     Value mappings['VpcCIDR']
     Export FnJoin("", [Ref("AWS::StackName"), "-VpcCIDR"])
   }
+  
   Output('VpcId') {
     Value Ref("VPC")
     Description "VPC ID"
