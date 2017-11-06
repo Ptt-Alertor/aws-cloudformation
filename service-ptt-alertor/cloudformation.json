@@ -298,5 +298,16 @@
         ]
       }
     }
+  },
+  "Outputs": {
+    "EcsService": {
+      "Value": {
+        "Fn::GetAtt": ["EcsService", "Name"]
+      },
+      "Description": "name of ecs service",
+      "Export": {
+        "Name": "Production-ECS-Service-Name"
+      }
+    }
   }
 }

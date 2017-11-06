@@ -24,14 +24,14 @@ CloudFormation {
       PolicyDocument: {
         Statement: [{
           Effect: 'Allow',
-          Action: [ 
+          Action: [
            "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
-           "elasticloadbalancing:DeregisterTargets", 
-           "elasticloadbalancing:Describe*", 
-           "elasticloadbalancing:RegisterInstancesWithLoadBalancer", 
-           "elasticloadbalancing:RegisterTargets", 
-           "ec2:Describe*", 
-           "ec2:AuthorizeSecurityGroupIngress" 
+           "elasticloadbalancing:DeregisterTargets",
+           "elasticloadbalancing:Describe*",
+           "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+           "elasticloadbalancing:RegisterTargets",
+           "ec2:Describe*",
+           "ec2:AuthorizeSecurityGroupIngress"
           ],
           Resource: "*"
         }]
@@ -138,7 +138,7 @@ CloudFormation {
     Type 'AWS::ElasticLoadBalancing::LoadBalancer'
     Property 'SecurityGroups', [ Ref('SecurityGroup') ]
     Property 'CrossZone', true
-    Property 'Subnets', [ 
+    Property 'Subnets', [
       FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-A")),
       FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-B")),
       FnImportValue(FnSub("#{stack['VPC']}-PublicSubnet-C")),
@@ -171,5 +171,10 @@ CloudFormation {
       Key: 'Name',
       Value: FnJoin('', [ environment, "-#{variables['app']}", "-SG"])
     } ]
+  }
+  Output("EcsService"){
+    Description 'name of ecs service'
+    Value FnGetAtt('EcsService', 'Name')
+    Export "Production-ECS-Service-Name"
   }
 }
