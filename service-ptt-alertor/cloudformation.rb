@@ -23,7 +23,7 @@ CloudFormation {
       PolicyName: 'ecs-service',
       PolicyDocument: {
         Statement: [{
-          Effe ct: 'Allow',
+          Effect: 'Allow',
           Action: [ 
            "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
            "elasticloadbalancing:DeregisterTargets", 

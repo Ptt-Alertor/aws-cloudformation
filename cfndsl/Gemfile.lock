@@ -1,0 +1,35 @@
+GIT
+  remote: https://github.com/vivekdubey/cloudformation_stack.git
+  revision: 904bdd35e548eb8eab30ad08caa94fb2a337495b
+  branch: v3
+  specs:
+    cloudformation_stack (1.0.0)
+      aws-sdk (= 2.8.14)
+      bundler (> 1.10.6)
+      rake (= 10.4.2)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    aws-sdk (2.8.14)
+      aws-sdk-resources (= 2.8.14)
+    aws-sdk-core (2.8.14)
+      aws-sigv4 (~> 1.0)
+      jmespath (~> 1.0)
+    aws-sdk-resources (2.8.14)
+      aws-sdk-core (= 2.8.14)
+    aws-sigv4 (1.0.0)
+    cfndsl (0.13.1)
+    jmespath (1.3.1)
+    rake (10.4.2)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  cfndsl
+  cloudformation_stack!
+  rake
+
+BUNDLED WITH
+   1.14.6
