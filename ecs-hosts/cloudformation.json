@@ -211,5 +211,14 @@
         ]
       }
     }
+  },
+  "Outputs": {
+    "AutoScalingGroup": {
+      "Value": { "Ref": "AutoScalingGroup" },
+      "Description": "Name of Auto Scaling Group",
+      "Export": {
+        "Name": "Production-ECS-hosts-Auto-Scaling-Group"
+      }
+    }
   }
 }

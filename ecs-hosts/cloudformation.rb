@@ -60,7 +60,7 @@ CloudFormation {
               "arn:aws:s3:::#{mapping['ConfigBucket']}",
               "arn:aws:s3:::#{mapping['ConfigBucket']}/*"
             ],
-            Sid: 'ConfigReadAccess' 
+            Sid: 'ConfigReadAccess'
           } ]
         }
       },
@@ -70,13 +70,13 @@ CloudFormation {
           Version: '2012-10-17',
           Statement: [ {
             Effect: 'Allow',
-            Action: [ 
+            Action: [
               'ecs:*',
               'ecr:*',
               'logs:CreateLogStream',
               'logs:PutLogEvents'
             ],
-            Resource: "*" 
+            Resource: "*"
           } ]
         }
       }
@@ -107,8 +107,8 @@ CloudFormation {
   Resource('AutoScalingGroup') {
     Type 'AWS::AutoScaling::AutoScalingGroup'
     Property 'LaunchConfigurationName', Ref('LaunchConfiguration')
-    Property 'AvailabilityZones', [ 
-      FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-A")), 
+    Property 'AvailabilityZones', [
+      FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-A")),
       FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-B")),
       FnImportValue(FnSub("#{stack['VPC']}-AvailabilityZone-C"))
     ]
@@ -135,5 +135,10 @@ CloudFormation {
       }
     ]
     Property 'TerminationPolicies', [ 'OldestInstance' ]
+  }
+  Output("AutoScalingGroup"){
+    Description 'Name of Auto Scaling Group'
+    Value Ref('AutoScalingGroup')
+    Export FnJoin('',[ Ref('AWS::StackName'), "-Auto-Scaling-Group"])
   }
 }
