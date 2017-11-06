@@ -177,4 +177,9 @@ CloudFormation {
     Value FnGetAtt('EcsService', 'Name')
     Export "Production-ECS-Service-Name"
   }
+  Output("ElasticLoadBalancer"){
+    Description 'name of elb'
+    Value Ref("ElasticLoadBalancer")
+    Export FnJoin("", [Ref("AWS::StackName"), "-ELB"])
+  }
 }

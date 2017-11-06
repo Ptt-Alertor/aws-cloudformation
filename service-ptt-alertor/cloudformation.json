@@ -308,6 +308,15 @@
       "Export": {
         "Name": "Production-ECS-Service-Name"
       }
+    },
+    "ElasticLoadBalancer": {
+      "Value": {
+        "Ref": "ElasticLoadBalancer"
+      },
+      "Description": "name of elb",
+      "Export": {
+        "Name": "Production-Ptt-Aletor-ELB"
+      }
     }
   }
 }
