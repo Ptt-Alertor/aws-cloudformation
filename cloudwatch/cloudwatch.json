@@ -60,6 +60,60 @@
                     { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
                 ]
             }
+        },
+        "EC2CPUCreditAlarm": {
+            "Type" : "AWS::CloudWatch::Alarm",
+            "Properties" : {
+                "ActionsEnabled" : true,
+                "AlarmName" : "EC2 CPU Credit",
+                "AlarmDescription" : "CPU Credit Balance Lower Exhausted",
+                "Namespace" : "AWS/EC2",
+                "Dimensions" : [
+                    {
+                        "Name": "AutoScalingGroupName",
+                        "Value": { "Fn::ImportValue": "Production-ECS-hosts-Auto-Scaling-Group" }
+                    }
+                ],
+                "MetricName" : "CPUCreditBalance",
+                "Period" : 900,
+                "Statistic" : "Minimum",
+                "ComparisonOperator" : "LessThanThreshold",
+                "Threshold" : 6,
+                "EvaluationPeriods" : 1,
+                "TreatMissingData" : "missing",
+                "AlarmActions" : [
+                    { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
+                ]
+            }
+        },
+        "ELBHealthyHostsAlarm": {
+            "Type" : "AWS::CloudWatch::Alarm",
+            "Properties" : {
+                "ActionsEnabled" : true,
+                "AlarmName" : "ELB Healthy Hosts",
+                "AlarmDescription" : "alarm while no any healthy host connected",
+                "Namespace" : "AWS/ELB",
+                "Dimensions" : [
+                    {
+                        "Name": "LoadBalancerName",
+                        "Value": { "Fn::ImportValue": "Production-Ptt-Aletor-ELB" }
+                    }
+                ],
+                "MetricName" : "HealthyHostCount",
+                "Period" : 300,
+                "Statistic" : "Minimum",
+                "ComparisonOperator" : "LessThanThreshold",
+                "Threshold" : 1,
+                "EvaluationPeriods" : 2,
+                "TreatMissingData" : "missing",
+                "Unit" : "Count",
+                "AlarmActions" : [
+                    { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
+                ],
+                "OKActions" : [
+                    { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
+                ]
+            }
         }
     }
 }
