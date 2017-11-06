@@ -1,0 +1,302 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "ECS Service ",
+  "Resources": {
+    "EcsServiceRole": {
+      "Type": "AWS::IAM::Role",
+      "Properties": {
+        "AssumeRolePolicyDocument": {
+          "Statement": [
+            {
+              "Effect": "Allow",
+              "Principal": {
+                "Service": "ecs.amazonaws.com"
+              },
+              "Action": [
+                "sts:AssumeRole"
+              ]
+            }
+          ]
+        },
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "ecs-service",
+            "PolicyDocument": {
+              "Statement": [
+                {
+                  "Effect": "Allow",
+                  "Action": [
+                    "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
+                    "elasticloadbalancing:DeregisterTargets",
+                    "elasticloadbalancing:Describe*",
+                    "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
+                    "elasticloadbalancing:RegisterTargets",
+                    "ec2:Describe*",
+                    "ec2:AuthorizeSecurityGroupIngress"
+                  ],
+                  "Resource": "*"
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "SecurityGroup": {
+      "Type": "AWS::EC2::SecurityGroup",
+      "Properties": {
+        "GroupDescription": "EC2 security group for Application Load Balancer",
+        "VpcId": {
+          "Fn::ImportValue": {
+            "Fn::Sub": "Production-VPC-VpcId"
+          }
+        },
+        "SecurityGroupIngress": [
+          {
+            "IpProtocol": "tcp",
+            "FromPort": 1,
+            "ToPort": 65535,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "SecurityGroupEgress": [
+          {
+            "IpProtocol": -1,
+            "FromPort": 1,
+            "ToPort": 65535,
+            "CidrIp": "0.0.0.0/0"
+          }
+        ],
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "Production",
+                  "-Ptt-Aletor",
+                  "-SG"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    },
+    "CloudwatchLogsGroup": {
+      "Type": "AWS::Logs::LogGroup",
+      "Properties": {
+        "LogGroupName": {
+          "Fn::Join": [
+            "",
+            [
+              "Production",
+              "-",
+              "Ptt-Aletor"
+            ]
+          ]
+        },
+        "RetentionInDays": "14"
+      }
+    },
+    "TaskDefinition": {
+      "Type": "AWS::ECS::TaskDefinition",
+      "Properties": {
+        "Family": {
+          "Fn::Join": [
+            "",
+            [
+              "Production",
+              "-",
+              "Ptt-Aletor"
+            ]
+          ]
+        },
+        "Volumes": [
+          {
+            "Name": "config",
+            "Host": {
+              "SourcePath": "/etc/ecs/config"
+            }
+          }
+        ],
+        "ContainerDefinitions": [
+          {
+            "Name": "Ptt-Aletor",
+            "Image": "896146012256.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
+            "Essential": true,
+            "Cpu": 500,
+            "Memory": 400,
+            "PortMappings": [
+              {
+                "ContainerPort": 9090,
+                "HostPort": 80
+              },
+              {
+                "ContainerPort": 6379,
+                "HostPort": 33008
+              },
+              {
+                "ContainerPort": 6060,
+                "HostPort": 33009
+              }
+            ],
+            "MountPoints": [
+              {
+                "ContainerPath": "/config",
+                "SourceVolume": "config",
+                "ReadOnly": true
+              }
+            ],
+            "Environment": [
+              {
+                "Name": "APP_ENV",
+                "Value": "Production"
+              },
+              {
+                "Name": "Redis-EndPoint",
+                "Value": {
+                  "Fn::ImportValue": {
+                    "Fn::Sub": "Production-Redis-EndPoint"
+                  }
+                }
+              },
+              {
+                "Name": "Redis-Port",
+                "Value": {
+                  "Fn::ImportValue": {
+                    "Fn::Sub": "Production-Redis-Port"
+                  }
+                }
+              }
+            ],
+            "LogConfiguration": {
+              "LogDriver": "awslogs",
+              "Options": {
+                "awslogs-group": {
+                  "Ref": "CloudwatchLogsGroup"
+                },
+                "awslogs-region": {
+                  "Ref": "AWS::Region"
+                },
+                "awslogs-stream-prefix": "Production"
+              }
+            }
+          }
+        ]
+      }
+    },
+    "EcsService": {
+      "Type": "AWS::ECS::Service",
+      "Properties": {
+        "ServiceName": "Ptt-Aletor",
+        "Cluster": {
+          "Fn::ImportValue": {
+            "Fn::Sub": "Production-ECS-Cluster"
+          }
+        },
+        "DesiredCount": 1,
+        "TaskDefinition": {
+          "Ref": "TaskDefinition"
+        },
+        "Role": {
+          "Ref": "EcsServiceRole"
+        },
+        "LoadBalancers": [
+          {
+            "ContainerName": "Ptt-Aletor",
+            "ContainerPort": 9090,
+            "LoadBalancerName": {
+              "Ref": "ElasticLoadBalancer"
+            }
+          }
+        ]
+      }
+    },
+    "ElasticLoadBalancer": {
+      "Type": "AWS::ElasticLoadBalancing::LoadBalancer",
+      "Properties": {
+        "SecurityGroups": [
+          {
+            "Ref": "SecurityGroup"
+          }
+        ],
+        "CrossZone": true,
+        "Subnets": [
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-A"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-B"
+            }
+          },
+          {
+            "Fn::ImportValue": {
+              "Fn::Sub": "Production-VPC-PublicSubnet-C"
+            }
+          }
+        ],
+        "Scheme": "internet-facing",
+        "Listeners": [
+          {
+            "LoadBalancerPort": 80,
+            "InstancePort": 80,
+            "Protocol": "HTTP",
+            "InstanceProtocol": "HTTP"
+          },
+          {
+            "LoadBalancerPort": 443,
+            "InstancePort": 80,
+            "Protocol": "SSL",
+            "InstanceProtocol": "TCP",
+            "SSLCertificateId": "arn:aws:acm:us-west-2:833648024955:certificate/02f83d97-cb5e-4ef9-8be5-5315bad3993f"
+          }
+        ],
+        "HealthCheck": {
+          "Target": {
+            "Fn::Join": [
+              "",
+              [
+                "HTTP:80/"
+              ]
+            ]
+          },
+          "HealthyThreshold": 10,
+          "UnhealthyThreshold": 2,
+          "Interval": 30,
+          "Timeout": 5
+        },
+        "LoadBalancerName": {
+          "Fn::Join": [
+            "",
+            [
+              "Production",
+              "-Ptt-Aletor",
+              "-LB"
+            ]
+          ]
+        },
+        "Tags": [
+          {
+            "Key": "Name",
+            "Value": {
+              "Fn::Join": [
+                "",
+                [
+                  "Production",
+                  "-Ptt-Aletor",
+                  "-SG"
+                ]
+              ]
+            }
+          }
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+    "app": "Ptt-Aletor",
+    "RedisPort": "6379",
+    "ContainerImage" : "896146012256.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
+    "Port": {
+        "WebSocket": {
+            "Container": 6060,
+            "Host": 33009
+        },
+        "Redis": {
+            "Container": 6379,
+            "Host": 33008
+        },
+        "HTTP": {
+            "Container": 9090,
+            "Host": 80
+        }
+    },
+    "Production": {
+        "DesiredCount": 1,
+        "CPU": 500,
+        "MEM": 400,
+        "AZMode": "single-az",
+        "PreferredAvailabilityZone": "us-west-2a",
+        "CacheNodeType": "cache.t2.micro",
+        "PreferredMaintenanceWindow": "sun:05:00-sun:09:00",
+        "EngineVersion": "3.2.6",
+        "NumCacheNodes": "1",
+        "CertARN": "arn:aws:acm:us-west-2:833648024955:certificate/02f83d97-cb5e-4ef9-8be5-5315bad3993f",
+        "Stack": {
+          "VPC": "Production-VPC",
+          "Redis": "Production-Redis",
+          "ECSCluster": "Production-ECS-Cluster"
+        },
+        "cloudFormation": {}
+    }
+}
