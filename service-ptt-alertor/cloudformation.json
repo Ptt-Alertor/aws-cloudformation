@@ -125,7 +125,7 @@
         "ContainerDefinitions": [
           {
             "Name": "Ptt-Aletor",
-            "Image": "896146012256.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
+            "Image": "833648024955.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
             "Essential": true,
             "Cpu": 500,
             "Memory": 400,

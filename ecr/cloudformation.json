@@ -8,5 +8,14 @@
         "RepositoryName" : "ptt-alertor-repo"
       }
     }
+  },
+  "Outputs": {
+    "ECR": {
+      "Value": { "Ref" : "ECR" },
+      "Description": "name of container registry repository",
+      "Export": {
+        "Name": "Production-Ptt-Alertor-ECS-Name"
+      }
+    }
   }
 }

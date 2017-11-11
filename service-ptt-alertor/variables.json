@@ -1,7 +1,7 @@
 {
     "app": "Ptt-Aletor",
     "RedisPort": "6379",
-    "ContainerImage" : "896146012256.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
+    "ContainerImage" : "833648024955.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
     "Port": {
         "WebSocket": {
             "Container": 6060,
