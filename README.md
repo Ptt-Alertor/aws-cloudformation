@@ -19,3 +19,25 @@ aws cloudformation create-stack --capabilities CAPABILITY_IAM --stack-name Produ
 ```bash
 aws cloudformation update-stack --capabilities CAPABILITY_IAM --stack-name Production-S3 --template-body file://./s3/s3.json
 ```
+
+## Checklist
+
+* [x] Create Stack in order
+  * [x] vpc
+  * [x] ecr
+  * [x] ecs-hosts
+  * [x] ecs-cluster
+  * [x] redis
+  * [x] s3
+    * [x] migrate s3 folders and files
+  * [x] service-ptt-alertor
+  * [x] sns
+  * [x] cloudwatch
+  * [x] elasticsearch
+  * [x] acm
+* [x] migrate redis db
+* [x] DNS change
+* [x] migrate elasticsearch and kibana setting
+* [x] setting travis ci
+  * [x] aws key
+  * [x] s3 bucket name
