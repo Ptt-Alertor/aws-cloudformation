@@ -326,6 +326,15 @@
       "Export": {
         "Name": "Production-Ptt-Aletor-LogGroup"
       }
+    },
+    "CloudwatchLogsGroupArn": {
+      "Value": {
+        "Fn::GetAtt": ["CloudwatchLogsGroup", "Arn"]
+      },
+      "Description": "arn of log group",
+      "Export": {
+        "Name": "Production-Ptt-Aletor-LogGroup-Arn"
+      }
     }
   }
 }

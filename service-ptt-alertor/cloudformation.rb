@@ -188,4 +188,9 @@ CloudFormation {
     Value Ref("CloudwatchLogsGroup")
     Export FnJoin("", [Ref("AWS::StackName"), "-LogGroup"])
   }
+  Output("CloudwatchLogsGroupArn"){
+    Description 'arn of log group'
+    Value FnGetAtt('CloudwatchLogsGroup', 'Arn')
+    Export FnJoin("", [Ref("AWS::StackName"), "-LogGroup-Arn"])
+  }
 }
