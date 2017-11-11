@@ -1,4 +1,5 @@
 # Uses https://github.com/stevenjack/cfndsl
+# TODO: Rename LogsGroup to LogGroup, Cloudwatch to CloudWatch, Ptt-Aletor to Ptt-Alertor
 absolute_path = File.dirname(__FILE__)
 variables = JSON.load(File.read("#{absolute_path}/variables.json"))
 environment=extras[:environment]
@@ -68,7 +69,7 @@ CloudFormation {
   Resource('CloudwatchLogsGroup'){
     Type "AWS::Logs::LogGroup"
     Property 'LogGroupName', FnJoin('',[ environment, '-', variables['app'] ])
-    Property 'RetentionInDays', '14'
+    Property 'RetentionInDays', '400'
   }
 
   Resource('TaskDefinition'){
@@ -181,5 +182,10 @@ CloudFormation {
     Description 'name of elb'
     Value Ref("ElasticLoadBalancer")
     Export FnJoin("", [Ref("AWS::StackName"), "-ELB"])
+  }
+  Output("CloudwatchLogsGroup"){
+    Description 'name of log group'
+    Value Ref("CloudwatchLogsGroup")
+    Export FnJoin("", [Ref("AWS::StackName"), "-LogGroup"])
   }
 }

@@ -98,7 +98,7 @@
             ]
           ]
         },
-        "RetentionInDays": "14"
+        "RetentionInDays": "400"
       }
     },
     "TaskDefinition": {
@@ -316,6 +316,15 @@
       "Description": "name of elb",
       "Export": {
         "Name": "Production-Ptt-Aletor-ELB"
+      }
+    },
+    "CloudwatchLogsGroup": {
+      "Value": {
+        "Ref": "CloudwatchLogsGroup"
+      },
+      "Description": "name of log group",
+      "Export": {
+        "Name": "Production-Ptt-Aletor-LogGroup"
       }
     }
   }
