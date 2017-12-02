@@ -11,6 +11,10 @@ yum install -y gcc-c++ make
 curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -
 yum install -y nodejs
 
-yum install -y wget 
+yum install -y wget
 wget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make
 npm install redis-dump -g
+
+yum erase ntp*
+yum -y install chrony
+service chronyd start
