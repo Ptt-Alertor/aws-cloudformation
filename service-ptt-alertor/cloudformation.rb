@@ -76,9 +76,9 @@ CloudFormation {
     Type "AWS::ECS::TaskDefinition"
     Property 'Family', FnJoin('',[ environment, '-', variables['app'] ])
     Property 'Volumes', [{
-      Name: 'config',
+      Name: 'env',
       Host: {
-        SourcePath: '/etc/ecs/config'
+        SourcePath: '/etc/ecs/.env'
       }
     }]
     Property 'ContainerDefinitions', [{
@@ -101,15 +101,22 @@ CloudFormation {
         }
       ],
       MountPoints: [
-        ContainerPath: "/config",
-        SourceVolume: "config",
+        ContainerPath: "/.env",
+        SourceVolume: "env",
         ReadOnly: true
       ],
       Environment: [
         { Name: 'APP_ENV', Value: environment },
-        { Name: 'Redis-EndPoint', Value: FnImportValue(FnSub("#{stack['Redis']}-EndPoint")) },
-        { Name: 'Redis-Port', Value: FnImportValue(FnSub("#{stack['Redis']}-Port")) }
+        { Name: 'Redis_EndPoint', Value: FnImportValue(FnSub("#{stack['Redis']}-EndPoint")) },
+        { Name: 'Redis_Port', Value: FnImportValue(FnSub("#{stack['Redis']}-Port")) }
       ],
+      EntryPoint: [
+        "sh",
+        "-c"
+      ],
+      Command: [
+        "export $(cat /.env | grep -v ^# | xargs);./ptt-alertor"
+      ]
       LogConfiguration: {
         LogDriver: 'awslogs',
         Options: {

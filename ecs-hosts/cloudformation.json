@@ -134,7 +134,7 @@
                     "Fn::Sub": "Production-ECS-Cluster"
                   }
                 },
-                " > /etc/ecs/ecs.config\nmkdir /etc/ecs/config\nyum install -y aws-cli\naws s3 cp s3://$config_bucket/config/ /etc/ecs/config/ --recursive\n\nyum update -y\nyum install -y gcc-c++ make\ncurl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -\nyum install -y nodejs\n\nyum install -y wget \nwget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make\nnpm install redis-dump -g\n\nyum erase ntp*\nyum -y install chrony\nservice chronyd start"
+                " > /etc/ecs/ecs.config\n\nyum install -y aws-cli\naws s3 cp s3://$config_bucket/.env.prod /etc/ecs/.env\n\nyum update -y\nyum install -y gcc-c++ make\ncurl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -\nyum install -y nodejs\n\nyum install -y wget \nwget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make\nnpm install redis-dump -g\n\nyum erase ntp*\nyum -y install chrony\nservice chronyd start"
               ]
             ]
           }

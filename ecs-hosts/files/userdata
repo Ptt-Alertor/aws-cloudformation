@@ -2,9 +2,9 @@
 
 config_bucket=%{config_bucket}
 echo ECS_CLUSTER=%{cluster_name} > /etc/ecs/ecs.config
-mkdir /etc/ecs/config
+
 yum install -y aws-cli
-aws s3 cp s3://$config_bucket/config/ /etc/ecs/config/ --recursive
+aws s3 cp s3://$config_bucket/.env.prod /etc/ecs/.env
 
 yum update -y
 yum install -y gcc-c++ make

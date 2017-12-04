@@ -116,9 +116,9 @@
         },
         "Volumes": [
           {
-            "Name": "config",
+            "Name": "env",
             "Host": {
-              "SourcePath": "/etc/ecs/config"
+              "SourcePath": "/etc/ecs/.env"
             }
           }
         ],
@@ -145,8 +145,8 @@
             ],
             "MountPoints": [
               {
-                "ContainerPath": "/config",
-                "SourceVolume": "config",
+                "ContainerPath": "/.env",
+                "SourceVolume": "env",
                 "ReadOnly": true
               }
             ],
@@ -156,7 +156,7 @@
                 "Value": "Production"
               },
               {
-                "Name": "Redis-EndPoint",
+                "Name": "Redis_EndPoint",
                 "Value": {
                   "Fn::ImportValue": {
                     "Fn::Sub": "Production-Redis-EndPoint"
@@ -164,13 +164,20 @@
                 }
               },
               {
-                "Name": "Redis-Port",
+                "Name": "Redis_Port",
                 "Value": {
                   "Fn::ImportValue": {
                     "Fn::Sub": "Production-Redis-Port"
                   }
                 }
               }
+            ],
+            "EntryPoint": [
+              "sh",
+              "-c"
+            ],
+            "Command": [
+              "export $(cat /.env | grep -v ^# | xargs);./ptt-alertor"
             ],
             "LogConfiguration": {
               "LogDriver": "awslogs",
