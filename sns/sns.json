@@ -22,13 +22,24 @@
                 }
             }
         },
+        "BirdyYangSubscription": {
+            "Type": "AWS::SNS::Subscription",
+            "Properties": {
+                "Endpoint": "maydayjean@gmail.com",
+                "Protocol": "email",
+                "TopicArn": {
+                    "Ref": "PttAlertorSNSTopic"
+                }
+            }
+        },
         "PttAlertorSNSTopic": {
             "Type": "AWS::SNS::Topic",
             "Properties": {
                 "DisplayName": "PttAlertor",
                 "Subscription": [
                     {"Endpoint": "dinos80152@gmail.com", "Protocol": "email"},
-                    {"Endpoint": "liam.icheng.lai@gmail.com", "Protocol": "email"}
+                    {"Endpoint": "liam.icheng.lai@gmail.com", "Protocol": "email"},
+                    {"Endpoint": "maydayjean@gmail.com", "Protocol": "email"}
                 ],
                 "TopicName": "Ptt-Alertor-Alarm"
             }
