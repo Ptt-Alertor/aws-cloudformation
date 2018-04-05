@@ -25,7 +25,7 @@
                 "ComparisonOperator" : "GreaterThanThreshold",
                 "Threshold" : 80,
                 "EvaluationPeriods" : 1,
-                "TreatMissingData" : "breaching",
+                "TreatMissingData" : "missing",
                 "Unit" : "Percent",
                 "AlarmActions" : [
                     { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
@@ -54,7 +54,7 @@
                 "ComparisonOperator" : "LessThanThreshold",
                 "Threshold" : 20,
                 "EvaluationPeriods" : 1,
-                "TreatMissingData" : "breaching",
+                "TreatMissingData" : "missing",
                 "Unit" : "Percent",
                 "AlarmActions" : [
                     { "Fn::ImportValue": "Production-Ptt-Alertor-SNS-Topic-Arn" }
