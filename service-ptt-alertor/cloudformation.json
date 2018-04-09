@@ -261,7 +261,7 @@
             "InstancePort": 80,
             "Protocol": "SSL",
             "InstanceProtocol": "TCP",
-            "SSLCertificateId": "arn:aws:acm:us-west-2:833648024955:certificate/02f83d97-cb5e-4ef9-8be5-5315bad3993f"
+            "SSLCertificateId": { "Fn::ImportValue": "Production-Pttalertor-Cert-Arn" }
           }
         ],
         "HealthCheck": {
