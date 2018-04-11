@@ -29,10 +29,12 @@ aws cloudformation update-stack --capabilities CAPABILITY_IAM --stack-name Produ
   * [x] ecs-cluster
   * [x] redis
   * [x] s3
+    * [x] new s3 bucket name
     * [x] migrate s3 folders and files
   * [x] service-ptt-alertor
   * [x] sns
   * [x] cloudwatch
+    * [x] copy dashboard source from console to `dashboard.yml`
   * [x] elasticsearch
   * [x] acm
 * [x] migrate redis db
