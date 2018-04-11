@@ -2,7 +2,7 @@
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "Production Certificate Manager",
 	"Resources": {
-		"pttalertorcomtwCert": {
+		"PttAlertorComTwCert": {
 			"Type": "AWS::CertificateManager::Certificate",
 			"Properties": {
 				"DomainName": "*.pttalertor.com.tw",
@@ -19,11 +19,11 @@
 		}
 	},
 	"Outputs": {
-		"pttalertorcomtwCertArn": {
-			"Value": { "Ref": "pttalertorcomtwCert"},
+		"PttAlertorComTwCertArn": {
+			"Value": { "Ref": "PttAlertorComTwCert"},
 			"Description": "Arn of *.pttalertor.com.tw certificate",
 			"Export": {
-				"Name": "Production-Pttalertor-Cert-Arn"
+				"Name": "Production-PttAlertor-Cert-Arn"
 			}
 		}
 	}

@@ -164,7 +164,7 @@ CloudFormation {
         InstancePort: variables['Port']['HTTP']['Host'],
         Protocol: 'SSL',
         InstanceProtocol: 'TCP',
-        SSLCertificateId: mapping['CertARN']
+        SSLCertificateId: FnImportValue("Production-PttAlertor-Cert-Arn")
       }
     ]
     Property 'HealthCheck', {

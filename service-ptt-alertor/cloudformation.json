@@ -261,7 +261,7 @@
             "InstancePort": 80,
             "Protocol": "SSL",
             "InstanceProtocol": "TCP",
-            "SSLCertificateId": { "Fn::ImportValue": "Production-Pttalertor-Cert-Arn" }
+            "SSLCertificateId": { "Fn::ImportValue": "Production-PttAlertor-Cert-Arn" }
           }
         ],
         "HealthCheck": {
