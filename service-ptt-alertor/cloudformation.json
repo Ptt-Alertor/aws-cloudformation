@@ -76,7 +76,7 @@
                 "",
                 [
                   "Production",
-                  "-Ptt-Aletor",
+                  "-Ptt-Alertor",
                   "-SG"
                 ]
               ]
@@ -85,7 +85,7 @@
         ]
       }
     },
-    "CloudwatchLogsGroup": {
+    "CloudWatchLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
         "LogGroupName": {
@@ -94,7 +94,7 @@
             [
               "Production",
               "-",
-              "Ptt-Aletor"
+              "Ptt-Alertor"
             ]
           ]
         },
@@ -110,7 +110,7 @@
             [
               "Production",
               "-",
-              "Ptt-Aletor"
+              "Ptt-Alertor"
             ]
           ]
         },
@@ -124,7 +124,7 @@
         ],
         "ContainerDefinitions": [
           {
-            "Name": "Ptt-Aletor",
+            "Name": "Ptt-Alertor",
             "Image": "833648024955.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
             "Essential": true,
             "Cpu": 500,
@@ -183,7 +183,7 @@
               "LogDriver": "awslogs",
               "Options": {
                 "awslogs-group": {
-                  "Ref": "CloudwatchLogsGroup"
+                  "Ref": "CloudWatchLogGroup"
                 },
                 "awslogs-region": {
                   "Ref": "AWS::Region"
@@ -198,7 +198,7 @@
     "EcsService": {
       "Type": "AWS::ECS::Service",
       "Properties": {
-        "ServiceName": "Ptt-Aletor",
+        "ServiceName": "Ptt-Alertor",
         "Cluster": {
           "Fn::ImportValue": {
             "Fn::Sub": "Production-ECS-Cluster"
@@ -213,7 +213,7 @@
         },
         "LoadBalancers": [
           {
-            "ContainerName": "Ptt-Aletor",
+            "ContainerName": "Ptt-Alertor",
             "ContainerPort": 9090,
             "LoadBalancerName": {
               "Ref": "ElasticLoadBalancer"
@@ -283,7 +283,7 @@
             "",
             [
               "Production",
-              "-Ptt-Aletor",
+              "-Ptt-Alertor",
               "-LB"
             ]
           ]
@@ -296,7 +296,7 @@
                 "",
                 [
                   "Production",
-                  "-Ptt-Aletor",
+                  "-Ptt-Alertor",
                   "-SG"
                 ]
               ]
@@ -322,25 +322,25 @@
       },
       "Description": "name of elb",
       "Export": {
-        "Name": "Production-Ptt-Aletor-ELB"
+        "Name": "Production-Ptt-Alertor-ELB"
       }
     },
-    "CloudwatchLogsGroup": {
+    "CloudWatchLogGroup": {
       "Value": {
-        "Ref": "CloudwatchLogsGroup"
+        "Ref": "CloudWatchLogGroup"
       },
       "Description": "name of log group",
       "Export": {
-        "Name": "Production-Ptt-Aletor-LogGroup"
+        "Name": "Production-Ptt-Alertor-LogGroup"
       }
     },
-    "CloudwatchLogsGroupArn": {
+    "CloudWatchLogGroupArn": {
       "Value": {
-        "Fn::GetAtt": ["CloudwatchLogsGroup", "Arn"]
+        "Fn::GetAtt": ["CloudWatchLogGroup", "Arn"]
       },
       "Description": "arn of log group",
       "Export": {
-        "Name": "Production-Ptt-Aletor-LogGroup-Arn"
+        "Name": "Production-Ptt-Alertor-LogGroup-Arn"
       }
     }
   }

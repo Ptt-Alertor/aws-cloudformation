@@ -1,5 +1,4 @@
 # Uses https://github.com/stevenjack/cfndsl
-# TODO: Rename LogsGroup to LogGroup, Cloudwatch to CloudWatch, Ptt-Aletor to Ptt-Alertor
 absolute_path = File.dirname(__FILE__)
 variables = JSON.load(File.read("#{absolute_path}/variables.json"))
 environment=extras[:environment]
@@ -66,7 +65,7 @@ CloudFormation {
     } ]
   }
 
-  Resource('CloudwatchLogsGroup'){
+  Resource('CloudWatchLogGroup'){
     Type "AWS::Logs::LogGroup"
     Property 'LogGroupName', FnJoin('',[ environment, '-', variables['app'] ])
     Property 'RetentionInDays', '400'
@@ -120,7 +119,7 @@ CloudFormation {
       LogConfiguration: {
         LogDriver: 'awslogs',
         Options: {
-          'awslogs-group': Ref('CloudwatchLogsGroup'),
+          'awslogs-group': Ref('CloudWatchLogGroup'),
           'awslogs-region': Ref("AWS::Region"),
           'awslogs-stream-prefix': environment
         }
@@ -190,14 +189,14 @@ CloudFormation {
     Value Ref("ElasticLoadBalancer")
     Export FnJoin("", [Ref("AWS::StackName"), "-ELB"])
   }
-  Output("CloudwatchLogsGroup"){
+  Output("CloudWatchLogGroup"){
     Description 'name of log group'
-    Value Ref("CloudwatchLogsGroup")
+    Value Ref("CloudWatchLogGroup")
     Export FnJoin("", [Ref("AWS::StackName"), "-LogGroup"])
   }
-  Output("CloudwatchLogsGroupArn"){
+  Output("CloudWatchLogGroupArn"){
     Description 'arn of log group'
-    Value FnGetAtt('CloudwatchLogsGroup', 'Arn')
+    Value FnGetAtt('CloudWatchLogGroup', 'Arn')
     Export FnJoin("", [Ref("AWS::StackName"), "-LogGroup-Arn"])
   }
 }

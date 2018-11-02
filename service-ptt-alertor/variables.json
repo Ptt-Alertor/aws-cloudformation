@@ -1,5 +1,5 @@
 {
-    "app": "Ptt-Aletor",
+    "app": "Ptt-Alertor",
     "RedisPort": "6379",
     "ContainerImage" : "833648024955.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
     "Port": {

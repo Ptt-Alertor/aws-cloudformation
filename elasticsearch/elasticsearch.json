@@ -195,13 +195,13 @@
 				"FunctionName": { "Ref": "LogsToElasticsearchLambda" },
 				"Action": "lambda:InvokeFunction",
 				"Principal": "logs.amazonaws.com",
-				"SourceArn": { "Fn::ImportValue": "Production-Ptt-Aletor-LogGroup-Arn" }
+				"SourceArn": { "Fn::ImportValue": "Production-Ptt-Alertor-LogGroup-Arn" }
 			}
 		},
 		"SubscriptionFilter": {
 			"Type" : "AWS::Logs::SubscriptionFilter",
 			"Properties" : {
-				"LogGroupName" : { "Fn::ImportValue": "Production-Ptt-Aletor-LogGroup" },
+				"LogGroupName" : { "Fn::ImportValue": "Production-Ptt-Alertor-LogGroup" },
 				"FilterPattern" : "",
 				"DestinationArn" : { "Fn::GetAtt": ["LogsToElasticsearchLambda", "Arn"] }
 			}

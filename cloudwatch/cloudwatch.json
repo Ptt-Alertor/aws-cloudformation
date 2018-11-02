@@ -96,7 +96,7 @@
                 "Dimensions" : [
                     {
                         "Name": "LoadBalancerName",
-                        "Value": { "Fn::ImportValue": "Production-Ptt-Aletor-ELB" }
+                        "Value": { "Fn::ImportValue": "Production-Ptt-Alertor-ELB" }
                     }
                 ],
                 "MetricName" : "HealthyHostCount",
