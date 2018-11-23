@@ -1,5 +1,10 @@
 # Ptt Alertor AWS Cloudformation
 
+## Architecture
+
+![architecture](ptt_alertor_architecture.png)
+<https://cloudcraft.co/view/7314db72-b1f6-4f49-b773-c3a11d4ed92b?key=tulQtXdlKJ2FIbHoaHqTzQ>
+
 ## [Command](http://docs.aws.amazon.com/cli/latest/reference/cloudformation/index.html#cli-aws-cloudformation)
 
 * Validate Stack
