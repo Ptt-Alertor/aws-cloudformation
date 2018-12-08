@@ -41,17 +41,12 @@
   * [x] ecs-cluster
   * [x] ecs-hosts
     * [x] update AMI
-    * [x] create key pair
-
-      ```console
-      aws ec2 create-key-pair --key-name ecs
-      ```
-
+    * [x] create key pair `aws ec2 create-key-pair --key-name ecs`
   * [x] redis
   * [x] acm
     * [x] Certificate Approval
   * [x] service-ptt-alertor
-    * push image on ECR
+    * [x] push image on ECR
   * [x] sns
   * [x] cloudwatch
     * [x] copy dashboard source from console to `dashboard.yml`
