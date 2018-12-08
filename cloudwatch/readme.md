@@ -4,3 +4,4 @@
   * AutoScalingGroupName
   * ServiceName
   * ClusterName
+  * CacheClusterId

@@ -5,15 +5,7 @@
     "ECSCluster": {
       "Type": "AWS::ECS::Cluster",
       "Properties": {
-        "ClusterName": {
-          "Fn::Join": [
-            "",
-            [
-              "Production",
-              "-Cluster"
-            ]
-          ]
-        }
+        "ClusterName": "Production-Cluster"
       }
     }
   },
@@ -24,16 +16,7 @@
         "Ref": "ECSCluster"
       },
       "Export": {
-        "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              }
-            ]
-          ]
-        }
+        "Name": "Production-ECS-Cluster"
       }
     }
   }

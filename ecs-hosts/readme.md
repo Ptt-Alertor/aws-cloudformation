@@ -14,25 +14,29 @@
 - rsyslog v8.x rpm should be available on custom yum repo (repo.tabdigital.com.au)
 - monit v5.x rpm should be available on custom yum repo (repo.tabdigital.com.au)
 - Configuration files should be present on S3:
-  * Newrelic config/ license - `s3://<environment_config_bucket>/ecs_hosts/%{environment}/nrsysmond.cfg`
-  * ECS.config file with authentication token - `s3://<environment_config_bucket>/ecs_hosts/%{environment}/ecs.config`
-  * Docker config.json with authentication token - `s3://<environment_config_bucket>/docker_hosts/config.json`
-  * Application keys (e.g. token_encryption.key & user_checksum.salt) - `s3://<environment_config_bucket>/environment_variables/authentication-keys/%{environment}/keys/`
-- Use latest ECS optimized AMI from: http://docs.aws.amazon.com/AmazonECS/latest/developerguide/ecs-optimized_AMI_launch_latest.html
+  - Newrelic config/ license - `s3://<environment_config_bucket>/ecs_hosts/%{environment}/nrsysmond.cfg`
+  - ECS.config file with authentication token - `s3://<environment_config_bucket>/ecs_hosts/%{environment}/ecs.config`
+  - Docker config.json with authentication token - `s3://<environment_config_bucket>/docker_hosts/config.json`
+  - Application keys (e.g. token_encryption.key & user_checksum.salt) - `s3://<environment_config_bucket>/environment_variables/authentication-keys/%{environment}/keys/`
+- Use latest ECS optimized AMI from: https://docs.aws.amazon.com/en_us/AmazonECS/latest/developerguide/al2ami-get-latest.html
 
 ## Deployment
 
 From deployment (current) repo, browse path `cloudformation/`
-```
+
+```bash
 $ bundle install
 $ bundle exec rake cf:template_json[UAT,src/platform/redbook/ecs-hosts]     # generate cloudformation template
 ```
 
 To deploy cloudformation:
-```
+
+```bash
 $ bundle exec rake cf:ec2_hosts[<environment>,<aws_profile>,<region>,<cloudformation_template_path>,<ami_id>]     # generate cloudformation template
 ```
+
 Example:
-```
+
+```bash
 $ bundle exec rake cf:ec2_hosts[UAT,sunbets-digital-development,ap-southeast-2,src/platform/redbook/ecs-hosts,ami-fbe9eb98]     # deploy cloudformation stack
 ```

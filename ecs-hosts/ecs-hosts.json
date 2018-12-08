@@ -7,9 +7,7 @@
       "Properties": {
         "GroupDescription": "EC2 security group for docker deployment",
         "VpcId": {
-          "Fn::ImportValue": {
-            "Fn::Sub": "Production-VPC-VpcId"
-          }
+          "Fn::ImportValue": "Production-VPC-VpcId"
         },
         "SecurityGroupIngress": [
           {
@@ -66,8 +64,8 @@
                     "s3:ListBucket"
                   ],
                   "Resource": [
-                    "arn:aws:s3:::ptt-alertor-2-bucket",
-                    "arn:aws:s3:::ptt-alertor-2-bucket/*"
+                    "arn:aws:s3:::ptt-alertor-3-bucket",
+                    "arn:aws:s3:::ptt-alertor-3-bucket/*"
                   ],
                   "Sid": "ConfigReadAccess"
                 }
@@ -109,7 +107,7 @@
     "LaunchConfiguration": {
       "Type": "AWS::AutoScaling::LaunchConfiguration",
       "Properties": {
-        "ImageId": "ami-29f80351",
+        "ImageId": "ami-0c1f4871ebaae6d86",
         "InstanceType": "t2.micro",
         "KeyName": "ecs",
         "SecurityGroups": [
@@ -124,17 +122,40 @@
         "UserData": {
           "Fn::Base64": {
             "Fn::Join": [
-              "",
+              "\n",
               [
-                "#!/bin/bash\n\nconfig_bucket=",
-                "ptt-alertor-2-bucket",
-                "\necho ECS_CLUSTER=",
+                "#!/bin/bash",
+                "\n",
+                "config_bucket=ptt-alertor-3-bucket",
                 {
-                  "Fn::ImportValue": {
-                    "Fn::Sub": "Production-ECS-Cluster"
-                  }
+                  "Fn::Sub": [
+                    "echo ECS_CLUSTER=${Cluster} > /etc/ecs/ecs.config",
+                    {
+                      "Cluster": {
+                        "Fn::ImportValue": "Production-ECS-Cluster"
+                      }
+                    }
+                  ]
                 },
-                " > /etc/ecs/ecs.config\n\nyum install -y aws-cli\naws s3 cp s3://$config_bucket/.env.prod /etc/ecs/.env\n\nyum update -y\nyum install -y gcc-c++ make\ncurl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -\nyum install -y nodejs\n\nyum install -y wget \nwget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make\nnpm install redis-dump -g\n\nyum erase ntp*\nyum -y install chrony\nservice chronyd start"
+                "\n",
+                "yum install -y aws-cli",
+                "aws s3 cp s3://$config_bucket/.env.prod /etc/ecs/.env",
+                "\n",
+                "yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm",
+                "sudo yum install -y redis",
+                "\n",
+                "yum update -y",
+                "yum install -y gcc-c++ make",
+                "curl -sL https://rpm.nodesource.com/setup_6.x | sudo -E bash -",
+                "yum install -y nodejs",
+                "\n",
+                "yum install -y wget",
+                "wget http://download.redis.io/redis-stable.tar.gz && tar xvzf redis-stable.tar.gz && cd redis-stable && make",
+                "npm install redis-dump -g",
+                "\n",
+                "yum erase ntp*",
+                "yum -y install chrony",
+                "service chronyd start"
               ]
             ]
           }
@@ -149,36 +170,24 @@
         },
         "AvailabilityZones": [
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-AvailabilityZone-A"
-            }
+            "Fn::ImportValue": "Production-VPC-AvailabilityZone-A"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-AvailabilityZone-B"
-            }
+            "Fn::ImportValue": "Production-VPC-AvailabilityZone-B"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-AvailabilityZone-C"
-            }
+            "Fn::ImportValue": "Production-VPC-AvailabilityZone-C"
           }
         ],
         "VPCZoneIdentifier": [
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-A"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-A"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-B"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-B"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-C"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-C"
           }
         ],
         "MaxSize": 2,
@@ -189,20 +198,12 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                "",
-                [
-                  "Production",
-                  "-ECS-host"
-                ]
-              ]
-            },
+            "Value": "Production-ECS-host",
             "PropagateAtLaunch": true
           },
           {
             "Key": "ImageId",
-            "Value": "ami-29f80351",
+            "Value": "ami-0c1f4871ebaae6d86",
             "PropagateAtLaunch": true
           }
         ],
@@ -214,7 +215,9 @@
   },
   "Outputs": {
     "AutoScalingGroup": {
-      "Value": { "Ref": "AutoScalingGroup" },
+      "Value": {
+        "Ref": "AutoScalingGroup"
+      },
       "Description": "Name of Auto Scaling Group",
       "Export": {
         "Name": "Production-ECS-hosts-Auto-Scaling-Group"

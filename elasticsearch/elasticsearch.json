@@ -30,7 +30,7 @@
 					"InstanceType" : "t2.small.elasticsearch",
 					"ZoneAwarenessEnabled" : false
 				},
-				"ElasticsearchVersion" : "5.5"
+				"ElasticsearchVersion" : "6.3"
 			}
 		},
 		"LambdaBasicExecutionRole" : {
@@ -50,25 +50,9 @@
 				},
 				"Path": "/",
 				"RoleName": "lambda_basic_execution",
-				"Policies": [
-					{
-						"PolicyName": "root",
-						"PolicyDocument": {
-							"Version": "2012-10-17",
-							"Statement": [
-								{
-									"Effect": "Allow",
-									"Action": [
-										"logs:CreateLogGroup",
-										"logs:CreateLogStream",
-										"logs:PutLogEvents"
-									],
-									"Resource": "arn:aws:logs:*:*:*"
-								}
-							]
-						}
-					}
-				]
+                "ManagedPolicyArns": [
+					"arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+                ]
 			}
 		},
 		"LambdaBasicExecutionInstanceProfile": {

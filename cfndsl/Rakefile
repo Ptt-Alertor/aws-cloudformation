@@ -1,7 +1,0 @@
-require 'rake'
-require_relative 'helper/rake'
-# At the moment it's being used from upstream gem.
-# require_relative 'helper/log'
-load 'rake/template.rake'
-load 'rake/deployment.rake'
-load 'rake/secrets.rake'

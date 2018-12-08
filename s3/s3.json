@@ -5,7 +5,7 @@
         "PttAlertorS3Bucket": {
             "Type": "AWS::S3::Bucket",
             "Properties": {
-                "BucketName": "ptt-alertor-2-bucket",
+                "BucketName": "ptt-alertor-3-bucket",
                 "VersioningConfiguration": { "Status": "Enabled" }
             }
         }

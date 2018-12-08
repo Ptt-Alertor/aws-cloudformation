@@ -155,15 +155,7 @@
       },
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-PublicSubnet-A"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-PublicSubnet-A"
         }
       }
     },
@@ -172,15 +164,7 @@
       "Value": "us-west-2a",
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-AvailabilityZone-A"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-AvailabilityZone-A"
         }
       }
     },
@@ -191,15 +175,7 @@
       },
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-PublicSubnet-B"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-PublicSubnet-B"
         }
       }
     },
@@ -208,15 +184,7 @@
       "Value": "us-west-2b",
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-AvailabilityZone-B"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-AvailabilityZone-B"
         }
       }
     },
@@ -227,15 +195,7 @@
       },
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-PublicSubnet-C"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-PublicSubnet-C"
         }
       }
     },
@@ -244,15 +204,7 @@
       "Value": "us-west-2c",
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-AvailabilityZone-C"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-AvailabilityZone-C"
         }
       }
     },
@@ -261,15 +213,7 @@
       "Value": "us-west-2",
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-Region"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-Region"
         }
       }
     },
@@ -278,15 +222,7 @@
       "Value": "172.31.0.0/16",
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-VpcCIDR"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-VpcCIDR"
         }
       }
     },
@@ -297,15 +233,7 @@
       },
       "Export": {
         "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-VpcId"
-            ]
-          ]
+          "Fn::Sub": "Production-VPC-VpcId"
         }
       }
     }

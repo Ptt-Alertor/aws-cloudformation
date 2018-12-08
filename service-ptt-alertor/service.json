@@ -1,48 +1,7 @@
 {
   "AWSTemplateFormatVersion": "2010-09-09",
-  "Description": "ECS Service ",
+  "Description": "ECS Service",
   "Resources": {
-    "EcsServiceRole": {
-      "Type": "AWS::IAM::Role",
-      "Properties": {
-        "AssumeRolePolicyDocument": {
-          "Statement": [
-            {
-              "Effect": "Allow",
-              "Principal": {
-                "Service": "ecs.amazonaws.com"
-              },
-              "Action": [
-                "sts:AssumeRole"
-              ]
-            }
-          ]
-        },
-        "Path": "/",
-        "Policies": [
-          {
-            "PolicyName": "ecs-service",
-            "PolicyDocument": {
-              "Statement": [
-                {
-                  "Effect": "Allow",
-                  "Action": [
-                    "elasticloadbalancing:DeregisterInstancesFromLoadBalancer",
-                    "elasticloadbalancing:DeregisterTargets",
-                    "elasticloadbalancing:Describe*",
-                    "elasticloadbalancing:RegisterInstancesWithLoadBalancer",
-                    "elasticloadbalancing:RegisterTargets",
-                    "ec2:Describe*",
-                    "ec2:AuthorizeSecurityGroupIngress"
-                  ],
-                  "Resource": "*"
-                }
-              ]
-            }
-          }
-        ]
-      }
-    },
     "SecurityGroup": {
       "Type": "AWS::EC2::SecurityGroup",
       "Properties": {
@@ -71,16 +30,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                "",
-                [
-                  "Production",
-                  "-Ptt-Alertor",
-                  "-SG"
-                ]
-              ]
-            }
+            "Value": "Production-Ptt-Alertor"
           }
         ]
       }
@@ -88,32 +38,14 @@
     "CloudWatchLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": {
-          "Fn::Join": [
-            "",
-            [
-              "Production",
-              "-",
-              "Ptt-Alertor"
-            ]
-          ]
-        },
+        "LogGroupName": "Production-Ptt-Alertor",
         "RetentionInDays": "400"
       }
     },
     "TaskDefinition": {
       "Type": "AWS::ECS::TaskDefinition",
       "Properties": {
-        "Family": {
-          "Fn::Join": [
-            "",
-            [
-              "Production",
-              "-",
-              "Ptt-Alertor"
-            ]
-          ]
-        },
+        "Family": "Production-Ptt-Alertor",
         "Volumes": [
           {
             "Name": "env",
@@ -125,7 +57,9 @@
         "ContainerDefinitions": [
           {
             "Name": "Ptt-Alertor",
-            "Image": "833648024955.dkr.ecr.us-west-2.amazonaws.com/ptt-alertor-repo:latest",
+            "Image": {
+              "Fn::Sub": "${AWS::AccountId}.dkr.ecr.${AWS::Region}.amazonaws.com/ptt-alertor-repo:latest"
+            },
             "Essential": true,
             "Cpu": 500,
             "Memory": 400,
@@ -200,16 +134,11 @@
       "Properties": {
         "ServiceName": "Ptt-Alertor",
         "Cluster": {
-          "Fn::ImportValue": {
-            "Fn::Sub": "Production-ECS-Cluster"
-          }
+          "Fn::ImportValue": "Production-ECS-Cluster"
         },
         "DesiredCount": 1,
         "TaskDefinition": {
           "Ref": "TaskDefinition"
-        },
-        "Role": {
-          "Ref": "EcsServiceRole"
         },
         "LoadBalancers": [
           {
@@ -233,19 +162,13 @@
         "CrossZone": true,
         "Subnets": [
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-A"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-A"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-B"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-B"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-C"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-C"
           }
         ],
         "Scheme": "internet-facing",
@@ -261,46 +184,23 @@
             "InstancePort": 80,
             "Protocol": "SSL",
             "InstanceProtocol": "TCP",
-            "SSLCertificateId": { "Fn::ImportValue": "Production-PttAlertor-Cert-Arn" }
+            "SSLCertificateId": {
+              "Fn::ImportValue": "Production-DinoLai-Cert-Arn"
+            }
           }
         ],
         "HealthCheck": {
-          "Target": {
-            "Fn::Join": [
-              "",
-              [
-                "HTTP:80/"
-              ]
-            ]
-          },
+          "Target": "HTTP:80/",
           "HealthyThreshold": 10,
           "UnhealthyThreshold": 2,
           "Interval": 30,
           "Timeout": 5
         },
-        "LoadBalancerName": {
-          "Fn::Join": [
-            "",
-            [
-              "Production",
-              "-Ptt-Alertor",
-              "-LB"
-            ]
-          ]
-        },
+        "LoadBalancerName": "Production-Ptt-Alertor-LB",
         "Tags": [
           {
             "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                "",
-                [
-                  "Production",
-                  "-Ptt-Alertor",
-                  "-SG"
-                ]
-              ]
-            }
+            "Value": "Production-Ptt-Alertor-LB"
           }
         ]
       }
@@ -309,7 +209,10 @@
   "Outputs": {
     "EcsService": {
       "Value": {
-        "Fn::GetAtt": ["EcsService", "Name"]
+        "Fn::GetAtt": [
+          "EcsService",
+          "Name"
+        ]
       },
       "Description": "name of ecs service",
       "Export": {
@@ -336,7 +239,10 @@
     },
     "CloudWatchLogGroupArn": {
       "Value": {
-        "Fn::GetAtt": ["CloudWatchLogGroup", "Arn"]
+        "Fn::GetAtt": [
+          "CloudWatchLogGroup",
+          "Arn"
+        ]
       },
       "Description": "arn of log group",
       "Export": {

@@ -38,14 +38,7 @@
         "Tags": [
           {
             "Key": "Name",
-            "Value": {
-              "Fn::Join": [
-                "",
-                [
-                  "Production-Redis-sg"
-                ]
-              ]
-            }
+            "Value": "Production-Redis"
           }
         ]
       }
@@ -56,19 +49,13 @@
         "Description": "Redis SubnetGroup",
         "SubnetIds": [
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-A"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-A"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-B"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-B"
           },
           {
-            "Fn::ImportValue": {
-              "Fn::Sub": "Production-VPC-PublicSubnet-C"
-            }
+            "Fn::ImportValue": "Production-VPC-PublicSubnet-C"
           }
         ]
       }
@@ -83,7 +70,7 @@
           "Ref": "SubnetGroup"
         },
         "Engine": "redis",
-        "EngineVersion": "3.2.6",
+        "EngineVersion": "5.0.0",
         "NumCacheNodes": "1",
         "Port": "6379",
         "PreferredMaintenanceWindow": "sun:05:00-sun:09:00",
@@ -105,17 +92,7 @@
       },
       "Description": "Redis Endpoint",
       "Export": {
-        "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-EndPoint"
-            ]
-          ]
-        }
+        "Name": "Production-Redis-EndPoint"
       }
     },
     "RedisPort": {
@@ -127,17 +104,7 @@
       },
       "Description": "Redis Port",
       "Export": {
-        "Name": {
-          "Fn::Join": [
-            "",
-            [
-              {
-                "Ref": "AWS::StackName"
-              },
-              "-Port"
-            ]
-          ]
-        }
+        "Name": "Production-Redis-Port"
       }
     }
   }

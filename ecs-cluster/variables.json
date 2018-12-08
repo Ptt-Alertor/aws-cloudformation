@@ -1,6 +1,0 @@
-{
-  "app": "ECS-Cluster",
-  "Production": {
-    "cloudFormation": {}
-  }
-}

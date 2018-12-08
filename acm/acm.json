@@ -2,28 +2,41 @@
 	"AWSTemplateFormatVersion": "2010-09-09",
 	"Description": "Production Certificate Manager",
 	"Resources": {
-		"PttAlertorComTwCert": {
+		"DinoLaiCert": {
 			"Type": "AWS::CertificateManager::Certificate",
 			"Properties": {
-				"DomainName": "*.pttalertor.com.tw",
-				"SubjectAlternativeNames" : [ "*.pttalertor.com.tw", "*.dinolai.com", "pttalertor.com.tw", "dinolai.com" ],
-				"DomainValidationOptions" : [{
-			    	"DomainName" : "pttalertor.com.tw",
-			      	"ValidationDomain" : "pttalertor.com.tw"
-			    },{
-			    	"DomainName" : "dinolai.com",
-			      	"ValidationDomain" : "dinolai.com"
-			    }],
-			    "Tags" : [ "pttalertor" ]
+				"DomainName": "*.dinolai.com",
+				"SubjectAlternativeNames": [
+					"*.dinolai.com",
+					"dinolai.com"
+				],
+				"DomainValidationOptions": [
+					{
+						"DomainName": "dinolai.com",
+						"ValidationDomain": "dinolai.com"
+					}
+				],
+				"Tags": [
+					{
+						"Key": "Environment",
+						"Value": "Production"
+					},
+					{
+						"Key": "Application",
+						"Value": "Ptt-Alertor"
+					}
+				]
 			}
 		}
 	},
 	"Outputs": {
-		"PttAlertorComTwCertArn": {
-			"Value": { "Ref": "PttAlertorComTwCert"},
-			"Description": "Arn of *.pttalertor.com.tw certificate",
+		"DinoLaiCertArn": {
+			"Value": {
+				"Ref": "DinoLaiCert"
+			},
+			"Description": "Arn of dinolai.com certificate",
 			"Export": {
-				"Name": "Production-PttAlertor-Cert-Arn"
+				"Name": "Production-DinoLai-Cert-Arn"
 			}
 		}
 	}

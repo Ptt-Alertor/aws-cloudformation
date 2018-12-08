@@ -29,20 +29,27 @@
     sed -i 's/\\u003e/>/g' mydb.dump.txt
     ```
 
+1. copy file from old ec2 host
+
+    ```bash
+    scp ec2-user@host:~/mydb.dump.txt ~/
+    ```
+
 1. copy file to new ec2 host
 
     ```bash
-    ssh mydb.dump.txt ec2-user@host:~/
+    scp mydb.dump.txt ec2-user@host:~/
     ```
 
 1. install redis-cli on new ec2 host
 
     ```bash
-    yum install redis
+    sudo yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    sudo yum install -y redis
     ```
 
 1. restore by dump file
 
     ```bash
-    cat mydb.dump.txt | redis-cli
+    cat mydb.dump.txt | redis-cli -h {redis_endpoint}
     ```
