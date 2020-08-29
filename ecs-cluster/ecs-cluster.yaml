@@ -1,0 +1,13 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Production ECS Host Cluster
+Resources:
+  ECSCluster:
+    Type: AWS::ECS::Cluster
+    Properties:
+      ClusterName: Production-Cluster
+Outputs:
+  EcsCluster:
+    Description: Exporting ECS-Cluster-Name
+    Value: !Ref ECSCluster
+    Export:
+      Name: Production-ECS-Cluster

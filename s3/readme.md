@@ -28,7 +28,7 @@
 1. execute aws s3 sync command
 
     ```console
-    aws s3 sync s3://ptt-alertor-2-bucket s3://ptt-alertor-3-bucket
+    aws s3 sync s3://ptt-alertor-2-bucket s3://ptt-alertor-2020-bucket
     ```
 
 * [transfer bucket files to another one](https://aws.amazon.com/tw/premiumsupport/knowledge-center/account-transfer-s3/)

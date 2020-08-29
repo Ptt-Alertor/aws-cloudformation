@@ -10,19 +10,13 @@
 * Validate Stack
 
   ```bash
-  aws cloudformation validate-template --template-body file://./s3/s3.json
+  aws cloudformation validate-template --template-body file://./s3/s3.yaml
   ```
 
-* Create Stack
+* Deploy Stack
 
   ```bash
-  aws cloudformation create-stack --capabilities CAPABILITY_IAM --stack-name Production-S3 --template-body file://./s3/s3.json
-  ```
-
-* Update Stack
-
-  ```bash
-  aws cloudformation update-stack --capabilities CAPABILITY_IAM --stack-name Production-S3 --template-body file://./s3/s3.json
+  aws cloudformation deploy --capabilities CAPABILITY_IAM --stack-name Production-S3 --template-file s3/s3.yaml
   ```
 
 ## Steps
@@ -49,7 +43,7 @@
     * [x] push image on ECR
   * [x] sns
   * [x] cloudwatch
-    * [x] copy dashboard source from console to `dashboard.yml`
+    * [x] copy dashboard source from console to `cloudwatch.yml`
   * [x] elasticsearch
     * [x] migrate elasticsearch and kibana setting
 * [x] stop service in former account
@@ -57,8 +51,8 @@
   * [x] docker stop container
 * [x] migrate redis db
 * [x] DNS change
-* [x] setting travis ci
+* [x] setting [ptt-alertor](https://github.com/meifamily/ptt-alertor) travis ci
   * [x] AWS_ACCESS_KEY_ID
-  * [x] AWS_SECRET_ACCESS_KEY in secure
+  * [x] AWS_SECRET_ACCESS_KEY in [secure](https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables)
   * [x] AWS_Docker_Repo
 * [x] delete former account stacks

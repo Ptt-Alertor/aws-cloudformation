@@ -1,7 +1,4 @@
 # CloudWatch
 
-* Manual Change Metrics Name in `dashboard.yml` DashboardBody
-  * AutoScalingGroupName
-  * ServiceName
-  * ClusterName
+* Manual Change Metrics Name in `cloudwatch.yaml` Dashboard Resource
   * CacheClusterId

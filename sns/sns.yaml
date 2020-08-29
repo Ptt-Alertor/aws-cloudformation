@@ -1,0 +1,39 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Production Simple Notification Service
+Resources:
+  DinoLaiSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: dinos80152@gmail.com
+      Protocol: email
+      TopicArn: !Ref PttAlertorSNSTopic
+  LiamLaiSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: liam.icheng.lai@gmail.com
+      Protocol: email
+      TopicArn: !Ref PttAlertorSNSTopic
+  BirdyYangSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: maydayjean@gmail.com
+      Protocol: email
+      TopicArn: !Ref PttAlertorSNSTopic
+  PttAlertorSNSTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      DisplayName: PttAlertor
+      Subscription:
+        - Endpoint: dinos80152@gmail.com
+          Protocol: email
+        - Endpoint: liam.icheng.lai@gmail.com
+          Protocol: email
+        - Endpoint: maydayjean@gmail.com
+          Protocol: email
+      TopicName: Ptt-Alertor-Alarm
+Outputs:
+  PttAlertorSNSTopicArn:
+    Value: !Ref PttAlertorSNSTopic
+    Description: Arn of Ptt Alertor SNS Topic
+    Export:
+      Name: Production-Ptt-Alertor-SNS-Topic-Arn
