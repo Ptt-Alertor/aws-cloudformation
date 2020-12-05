@@ -6,7 +6,7 @@
 
 ### Solution
 
-1. dump redis data by [node-redis-dump](https://github.com/jeremyfa/node-redis-dump)
+1. dump redis data by [node-redis-dump](https://github.com/jeremyfa/node-redis-dump), (if OOM, add SWAP in Linux)
 
     ```bash
     redis-dump -h {redis_endpoint} > mydb.dump.txt
