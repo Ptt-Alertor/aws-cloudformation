@@ -1,4 +1,3 @@
----
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Production Elasticsearch Service With Lambda
 Resources:
@@ -25,138 +24,148 @@ Resources:
         InstanceType: t2.small.elasticsearch
         ZoneAwarenessEnabled: false
       ElasticsearchVersion: "7.7"
-  # LambdaBasicExecutionRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: "2012-10-17"
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service: lambda.amazonaws.com
-  #           Action: sts:AssumeRole
-  #     Path: "/"
-  #     RoleName: lambda_basic_execution
-  #     ManagedPolicyArns:
-  #       - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
-  # LambdaBasicExecutionInstanceProfile:
-  #   Type: AWS::IAM::InstanceProfile
-  #   Properties:
-  #     Path: "/"
-  #     Roles:
-  #       - !Ref LambdaBasicExecutionRole
-  # DeleteIndiceJobLambda:
-  #   Type: AWS::Lambda::Function
-  #   Properties:
-  #     Code:
-  #       S3Bucket:
-  #         Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
-  #       S3Key: lambdas/delete_elasticsearch_indice.zip
-  #     Description: keep elasticsearch only 30 days indices for free tier
-  #     Environment:
-  #       Variables:
-  #         ELASTICSEARCH_ENDPOINT:
-  #           Fn::GetAtt:
-  #             - PttAlertorElasticsearch
-  #             - DomainEndpoint
-  #     FunctionName: Delete_ES_Indice
-  #     Handler: delete_elasticsearch_indice.lambda_handler
-  #     Role:
-  #       Fn::GetAtt:
-  #         - LambdaBasicExecutionRole
-  #         - Arn
-  #     Runtime: python3.8
-  #     Timeout: 30
-  # OnceADayScheduledRule:
-  #   Type: AWS::Events::Rule
-  #   Properties:
-  #     Name: once-a-day
-  #     Description: execute once a day
-  #     State: ENABLED
-  #     ScheduleExpression: rate(1 day)
-  #     Targets:
-  #       - Arn:
-  #           Fn::GetAtt:
-  #             - DeleteIndiceJobLambda
-  #             - Arn
-  #         Id: delete-es-indice-everyday-worker
-  # PermissionForScheduledRuleToInvokeLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     FunctionName: !Ref DeleteIndiceJobLambda
-  #     Action: lambda:InvokeFunction
-  #     Principal: events.amazonaws.com
-  #     SourceArn:
-  #       Fn::GetAtt:
-  #         - OnceADayScheduledRule
-  #         - Arn
-  # LambdaElasticsearchExecutionRole:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: "2012-10-17"
-  #       Statement:
-  #         - Effect: Allow
-  #           Principal:
-  #             Service: lambda.amazonaws.com
-  #           Action: sts:AssumeRole
-  #     Path: "/"
-  #     RoleName: lambda_elasticsearch_execution
-  #     Policies:
-  #       - PolicyName: root
-  #         PolicyDocument:
-  #           Version: "2012-10-17"
-  #           Statement:
-  #             - Action:
-  #                 - es:*
-  #               Effect: Allow
-  #               Resource: arn:aws:es:*:*:*
-  # LambdaElasticsearchExecutionInstanceProfile:
-  #   Type: AWS::IAM::InstanceProfile
-  #   Properties:
-  #     Path: "/"
-  #     Roles:
-  #       - !Ref LambdaElasticsearchExecutionRole
-  # LogsToElasticsearchLambda:
-  #   Type: AWS::Lambda::Function
-  #   Properties:
-  #     Code:
-  #       S3Bucket:
-  #         Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
-  #       S3Key: lambdas/logs_to_elasticsearch.zip
-  #     Description: CloudWatch Logs to Amazon ES streaming
-  #     Environment:
-  #       Variables:
-  #         ELASTICSEARCH_ENDPOINT:
-  #           Fn::GetAtt:
-  #             - PttAlertorElasticsearch
-  #             - DomainEndpoint
-  #     FunctionName: LogsToElasticsearch
-  #     Handler: logs_to_elasticsearch.handler
-  #     Role:
-  #       Fn::GetAtt:
-  #         - LambdaElasticsearchExecutionRole
-  #         - Arn
-  #     Runtime: nodejs12.x
-  #     Timeout: 60
-  # PermissionForToInvokeLambda:
-  #   Type: AWS::Lambda::Permission
-  #   Properties:
-  #     FunctionName: !Ref LogsToElasticsearchLambda
-  #     Action: lambda:InvokeFunction
-  #     Principal: logs.amazonaws.com
-  #     SourceArn:
-  #       Fn::ImportValue: Production-Ptt-Alertor-LogGroup-Arn
-  # SubscriptionFilter:
-  #   Type: AWS::Logs::SubscriptionFilter
-  #   Properties:
-  #     LogGroupName:
-  #       Fn::ImportValue: Production-Ptt-Alertor-LogGroup
-  #     FilterPattern: ""
-  #     DestinationArn:
-  #       Fn::GetAtt:
-  #         - LogsToElasticsearchLambda
-  #         - Arn
+
+  LambdaBasicExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      RoleName: lambda_basic_execution
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  LambdaBasicExecutionInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref LambdaBasicExecutionRole
+
+  DeleteIndiceJobLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
+        S3Key: lambdas/delete_elasticsearch_indice.zip
+      Description: keep elasticsearch only 30 days indices for free tier
+      Environment:
+        Variables:
+          ELASTICSEARCH_ENDPOINT:
+            Fn::GetAtt:
+              - PttAlertorElasticsearch
+              - DomainEndpoint
+      FunctionName: Delete_ES_Indice
+      Handler: delete_elasticsearch_indice.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - LambdaBasicExecutionRole
+          - Arn
+      Runtime: python3.8
+      Timeout: 30
+
+  OnceADayScheduledRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: once-a-day
+      Description: execute once a day
+      State: ENABLED
+      ScheduleExpression: rate(1 day)
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - DeleteIndiceJobLambda
+              - Arn
+          Id: delete-es-indice-everyday-worker
+
+  PermissionForScheduledRuleToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref DeleteIndiceJobLambda
+      Action: lambda:InvokeFunction
+      Principal: events.amazonaws.com
+      SourceArn:
+        Fn::GetAtt:
+          - OnceADayScheduledRule
+          - Arn
+
+  LambdaElasticsearchExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      RoleName: lambda_elasticsearch_execution
+      Policies:
+        - PolicyName: AmazonESFullAccess
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Action:
+                  - es:*
+                Effect: Allow
+                Resource: arn:aws:es:*:*:*
+
+  LambdaElasticsearchExecutionInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Path: "/"
+      Roles:
+        - !Ref LambdaElasticsearchExecutionRole
+
+  LogsToElasticsearchLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      Code:
+        S3Bucket:
+          Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
+        S3Key: lambdas/logs_to_elasticsearch.zip
+      Description: CloudWatch Logs to Amazon ES streaming
+      Environment:
+        Variables:
+          ELASTICSEARCH_ENDPOINT:
+            Fn::GetAtt:
+              - PttAlertorElasticsearch
+              - DomainEndpoint
+      FunctionName: LogsToElasticsearch
+      Handler: logs_to_elasticsearch.handler
+      Role:
+        Fn::GetAtt:
+          - LambdaElasticsearchExecutionRole
+          - Arn
+      Runtime: nodejs12.x
+      Timeout: 60
+
+  PermissionForToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref LogsToElasticsearchLambda
+      Action: lambda:InvokeFunction
+      Principal: logs.amazonaws.com
+      SourceArn:
+        Fn::ImportValue: Production-Ptt-Alertor-LogGroup-Arn
+
+  SubscriptionFilter:
+    Type: AWS::Logs::SubscriptionFilter
+    Properties:
+      LogGroupName:
+        Fn::ImportValue: Production-Ptt-Alertor-LogGroup
+      FilterPattern: ""
+      DestinationArn:
+        Fn::GetAtt:
+          - LogsToElasticsearchLambda
+          - Arn
 
 Outputs:
   PttAlertorElasticsearchEndPoint:
@@ -167,6 +176,7 @@ Outputs:
     Description: EndPoint of PttAlertorElasticsearch
     Export:
       Name: Production-Ptt-Alertor-Elasticsearch-Endpoint
+
   PttAlertorElasticsearchArn:
     Value:
       Fn::GetAtt:
@@ -175,25 +185,29 @@ Outputs:
     Description: Arn of PttAlertorElasticsearch
     Export:
       Name: Production-Ptt-Alertor-Elasticsearch-Arn
-  # LambdaBasicExecuteRoleName:
-  #   Value: !Ref LambdaBasicExecutionRole
-  #   Description: Resource Name of Lambda Basic Execute Role
-  # LambdaBasicExecuteRoleArn:
-  #   Value:
-  #     Fn::GetAtt:
-  #       - LambdaBasicExecutionRole
-  #       - Arn
-  #   Description: Arn of Lambda Basic Execute Role
-  #   Export:
-  #     Name: Production-Lambda-Basic-Execution-Role-Arn
-  # DeleteIndiceJobLambdaName:
-  #   Value: !Ref DeleteIndiceJobLambda
-  #   Description: Name of Delete Indice Job Lambda function
-  # DeleteIndiceJobLambdaArn:
-  #   Value:
-  #     Fn::GetAtt:
-  #       - DeleteIndiceJobLambda
-  #       - Arn
-  #   Description: Arn of Delete Indice Job Lambda function
-  #   Export:
-  #     Name: Production-Delete-Indice-Lambda-Arn
+
+  LambdaBasicExecuteRoleName:
+    Value: !Ref LambdaBasicExecutionRole
+    Description: Resource Name of Lambda Basic Execute Role
+
+  LambdaBasicExecuteRoleArn:
+    Value:
+      Fn::GetAtt:
+        - LambdaBasicExecutionRole
+        - Arn
+    Description: Arn of Lambda Basic Execute Role
+    Export:
+      Name: Production-Lambda-Basic-Execution-Role-Arn
+
+  DeleteIndiceJobLambdaName:
+    Value: !Ref DeleteIndiceJobLambda
+    Description: Name of Delete Indice Job Lambda function
+
+  DeleteIndiceJobLambdaArn:
+    Value:
+      Fn::GetAtt:
+        - DeleteIndiceJobLambda
+        - Arn
+    Description: Arn of Delete Indice Job Lambda function
+    Export:
+      Name: Production-Delete-Indice-Lambda-Arn

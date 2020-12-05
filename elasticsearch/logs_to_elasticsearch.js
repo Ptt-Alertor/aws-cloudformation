@@ -5,9 +5,14 @@ var crypto = require('crypto');
 
 var endpoint = process.env.ELASTICSEARCH_ENDPOINT;
 
+// Set this to true if you want to debug why data isn't making it to
+// your Elasticsearch cluster. This will enable logging of failed items
+// to CloudWatch Logs.
+var logFailedResponses = false;
+
 exports.handler = function(input, context) {
     // decode input from base64
-    var zippedInput = new Buffer(input.awslogs.data, 'base64');
+    var zippedInput = new Buffer.from(input.awslogs.data, 'base64');
 
     // decompress the input
     zlib.gunzip(zippedInput, function(error, buffer) {
@@ -33,13 +38,7 @@ exports.handler = function(input, context) {
             }));
 
             if (error) {
-                console.log('Error: ' + JSON.stringify(error, null, 2));
-
-                if (failedItems && failedItems.length > 0) {
-                    console.log("Failed Items: " +
-                        JSON.stringify(failedItems, null, 2));
-                }
-
+                logFailure(error, failedItems);
                 context.fail(JSON.stringify(error));
             } else {
                 console.log('Success: ' + JSON.stringify(success));
@@ -145,10 +144,12 @@ function post(body, callback) {
         response.on('data', function(chunk) {
             responseBody += chunk;
         });
+
         response.on('end', function() {
             var info = JSON.parse(responseBody);
             var failedItems;
             var success;
+            var error;
 
             if (response.statusCode >= 200 && response.statusCode < 299) {
                 failedItems = info.items.filter(function(x) {
@@ -162,10 +163,15 @@ function post(body, callback) {
                 };
             }
 
-            var error = response.statusCode !== 200 || info.errors === true ? {
-                "statusCode": response.statusCode,
-                "responseBody": responseBody
-            } : null;
+            if (response.statusCode !== 200 || info.errors === true) {
+                // prevents logging of failed entries, but allows logging
+                // of other errors such as access restrictions
+                delete info.items;
+                error = {
+                    statusCode: response.statusCode,
+                    responseBody: info
+                };
+            }
 
             callback(error, success, response.statusCode, failedItems);
         });
@@ -242,4 +248,15 @@ function hmac(key, str, encoding) {
 
 function hash(str, encoding) {
     return crypto.createHash('sha256').update(str, 'utf8').digest(encoding);
+}
+
+function logFailure(error, failedItems) {
+    if (logFailedResponses) {
+        console.log('Error: ' + JSON.stringify(error, null, 2));
+
+        if (failedItems && failedItems.length > 0) {
+            console.log("Failed Items: " +
+                JSON.stringify(failedItems, null, 2));
+        }
+    }
 }
