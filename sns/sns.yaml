@@ -19,6 +19,12 @@ Resources:
       Endpoint: maydayjean@gmail.com
       Protocol: email
       TopicArn: !Ref PttAlertorSNSTopic
+  ScottKaoSubscription:
+    Type: AWS::SNS::Subscription
+    Properties:
+      Endpoint: scottxxx666@gmail.com
+      Protocol: email
+      TopicArn: !Ref PttAlertorSNSTopic
   PttAlertorSNSTopic:
     Type: AWS::SNS::Topic
     Properties:

@@ -59,3 +59,12 @@ Resources:
                 Password: p@ssword
                 PasswordResetRequired: true
             UserName: birdyyang
+    ScottKaoIAMUsers:
+        Type: AWS::IAM::User
+        Properties:
+            Groups:
+                - manager
+            LoginProfile:
+                Password: p@ssword
+                PasswordResetRequired: true
+            UserName: scottkao
