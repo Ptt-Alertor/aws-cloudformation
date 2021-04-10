@@ -20,7 +20,7 @@ def send_delete(url, data={}):
 
 def lambda_handler(event, context):
     elastic_search_endpoint = os.environ['ELASTICSEARCH_ENDPOINT']
-    deleteDate = date.today() - timedelta(days=31)
+    deleteDate = date.today() - timedelta(days=27)
     indice = 'cwl-' + deleteDate.strftime('%Y.%m.%d')
     url = elastic_search_endpoint + "/" + indice
     logging.info(url)

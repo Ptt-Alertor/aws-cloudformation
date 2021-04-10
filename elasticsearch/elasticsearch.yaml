@@ -54,7 +54,7 @@ Resources:
         S3Bucket:
           Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
         S3Key: lambdas/delete_elasticsearch_indice.zip
-      Description: keep elasticsearch only 30 days indices for free tier
+      Description: keep elasticsearch storage for free tier
       Environment:
         Variables:
           ELASTICSEARCH_ENDPOINT:
