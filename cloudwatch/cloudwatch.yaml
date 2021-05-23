@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production CloudWatch
+Description: CloudWatch
 Resources:
   PttAlertorCPUAlarm:
     Type: AWS::CloudWatch::Alarm
@@ -11,10 +11,10 @@ Resources:
       Dimensions:
         - Name: ClusterName
           Value:
-            Fn::ImportValue: Production-ECS-Cluster
+            Fn::ImportValue: ECS-Cluster
         - Name: ServiceName
           Value:
-            Fn::ImportValue: Production-ECS-Service-Name
+            Fn::ImportValue: ECS-Service-Name
       MetricName: CPUUtilization
       Period: 300
       Statistic: Average
@@ -24,9 +24,9 @@ Resources:
       TreatMissingData: missing
       Unit: Percent
       AlarmActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
       OKActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
   PttAlertorMemoryAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
@@ -37,7 +37,7 @@ Resources:
       Dimensions:
         - Name: ClusterName
           Value:
-            Fn::ImportValue: Production-ECS-Cluster
+            Fn::ImportValue: ECS-Cluster
       MetricName: MemoryReservation
       Period: 60
       Statistic: Maximum
@@ -47,7 +47,7 @@ Resources:
       TreatMissingData: missing
       Unit: Percent
       AlarmActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
   EC2CPUCreditAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
@@ -58,7 +58,7 @@ Resources:
       Dimensions:
         - Name: AutoScalingGroupName
           Value:
-            Fn::ImportValue: Production-ECS-hosts-Auto-Scaling-Group
+            Fn::ImportValue: ECS-hosts-Auto-Scaling-Group
       MetricName: CPUCreditBalance
       Period: 900
       Statistic: Minimum
@@ -67,7 +67,7 @@ Resources:
       EvaluationPeriods: 1
       TreatMissingData: missing
       AlarmActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
   ELBHealthyHostsAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
@@ -78,7 +78,7 @@ Resources:
       Dimensions:
         - Name: LoadBalancerName
           Value:
-            Fn::ImportValue: Production-Ptt-Alertor-ELB
+            Fn::ImportValue: Ptt-Alertor-ELB
       MetricName: HealthyHostCount
       Period: 300
       Statistic: Minimum
@@ -88,11 +88,11 @@ Resources:
       TreatMissingData: missing
       Unit: Count
       AlarmActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
       OKActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
   PttAlertorDashboard:
     Type: AWS::CloudWatch::Dashboard
     Properties:
       DashboardName: Ptt-Alertor
-      DashboardBody: '{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","NetworkIn",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":0,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","NetworkOut",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":3,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","CPUUtilization","AutoScalingGroupName","Production-ECS-Hosts-AutoScalingGroup",{"color":"#2ca02c"}],["AWS/ECS",".","ServiceName","Ptt-Alertor","ClusterName","Production-Cluster",{"color":"#1f77b4"}],[".","MemoryUtilization",".",".",".",".",{"color":"#ff7f0e"}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":9,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/ElastiCache","BytesUsedForCache","CacheClusterId","pro-re-4zczrcwfokbb"]],"region":"us-west-2","period":300}},{"type":"metric","x":0,"y":9,"width":12,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/ELB","HTTPCode_ELB_5XX",{"stat":"Sum"}],[".","HTTPCode_Backend_4XX",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":0,"y":6,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/ELB","BackendConnectionErrors",{"stat":"Sum"}],[".","RequestCount",{"stat":"Sum"}],[".","SpilloverCount",{"stat":"Sum"}],[".","SurgeQueueLength",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":0,"y":3,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","CPUCreditBalance","AutoScalingGroupName","Production-ECS-Hosts-AutoScalingGroup",{"stat":"Average","period":900}],[".","CPUCreditUsage",".",".",{"stat":"Sum","period":900}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":6,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/ElastiCache","CPUUtilization","CacheClusterId","pro-re-4zczrcwfokbb"],[".","EngineCPUUtilization",".","."]],"region":"us-west-2","title":"CPUUtilization, EngineCPUUtilization (Redis)"}}]}'
+      DashboardBody: '{"widgets":[{"type":"metric","x":0,"y":0,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","NetworkIn",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":0,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","NetworkOut",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":3,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","CPUUtilization","AutoScalingGroupName","ECS-Hosts-AutoScalingGroup",{"color":"#2ca02c"}],["AWS/ECS",".","ServiceName","Ptt-Alertor","ClusterName","Cluster",{"color":"#1f77b4"}],[".","MemoryUtilization",".",".",".",".",{"color":"#ff7f0e"}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":9,"width":6,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/ElastiCache","BytesUsedForCache","CacheClusterId","pro-re-4zczrcwfokbb"]],"region":"us-west-2","period":300}},{"type":"metric","x":0,"y":9,"width":12,"height":3,"properties":{"view":"singleValue","stacked":false,"metrics":[["AWS/ELB","HTTPCode_ELB_5XX",{"stat":"Sum"}],[".","HTTPCode_Backend_4XX",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":0,"y":6,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/ELB","BackendConnectionErrors",{"stat":"Sum"}],[".","RequestCount",{"stat":"Sum"}],[".","SpilloverCount",{"stat":"Sum"}],[".","SurgeQueueLength",{"stat":"Sum"}]],"region":"us-west-2","period":300}},{"type":"metric","x":0,"y":3,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/EC2","CPUCreditBalance","AutoScalingGroupName","ECS-Hosts-AutoScalingGroup",{"stat":"Average","period":900}],[".","CPUCreditUsage",".",".",{"stat":"Sum","period":900}]],"region":"us-west-2","period":300}},{"type":"metric","x":12,"y":6,"width":12,"height":3,"properties":{"view":"timeSeries","stacked":false,"metrics":[["AWS/ElastiCache","CPUUtilization","CacheClusterId","pro-re-4zczrcwfokbb"],[".","EngineCPUUtilization",".","."]],"region":"us-west-2","title":"CPUUtilization, EngineCPUUtilization (Redis)"}}]}'

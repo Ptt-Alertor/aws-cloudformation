@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production Elasticsearch Service With Lambda
+Description: Elasticsearch Service With Lambda
 Resources:
   PttAlertorElasticsearch:
     Type: AWS::Elasticsearch::Domain
@@ -52,7 +52,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
+          Fn::ImportValue: Ptt-Alertor-S3-Bucket-Name
         S3Key: lambdas/delete_elasticsearch_indice.zip
       Description: keep elasticsearch storage for free tier
       Environment:
@@ -129,7 +129,7 @@ Resources:
     Properties:
       Code:
         S3Bucket:
-          Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
+          Fn::ImportValue: Ptt-Alertor-S3-Bucket-Name
         S3Key: lambdas/logs_to_elasticsearch.zip
       Description: CloudWatch Logs to Amazon ES streaming
       Environment:
@@ -154,13 +154,13 @@ Resources:
       Action: lambda:InvokeFunction
       Principal: logs.amazonaws.com
       SourceArn:
-        Fn::ImportValue: Production-Ptt-Alertor-LogGroup-Arn
+        Fn::ImportValue: Ptt-Alertor-LogGroup-Arn
 
   SubscriptionFilter:
     Type: AWS::Logs::SubscriptionFilter
     Properties:
       LogGroupName:
-        Fn::ImportValue: Production-Ptt-Alertor-LogGroup
+        Fn::ImportValue: Ptt-Alertor-LogGroup
       FilterPattern: ""
       DestinationArn:
         Fn::GetAtt:
@@ -175,7 +175,7 @@ Outputs:
         - DomainEndpoint
     Description: EndPoint of PttAlertorElasticsearch
     Export:
-      Name: Production-Ptt-Alertor-Elasticsearch-Endpoint
+      Name: Ptt-Alertor-Elasticsearch-Endpoint
 
   PttAlertorElasticsearchArn:
     Value:
@@ -184,7 +184,7 @@ Outputs:
         - DomainArn
     Description: Arn of PttAlertorElasticsearch
     Export:
-      Name: Production-Ptt-Alertor-Elasticsearch-Arn
+      Name: Ptt-Alertor-Elasticsearch-Arn
 
   LambdaBasicExecuteRoleName:
     Value: !Ref LambdaBasicExecutionRole
@@ -197,7 +197,7 @@ Outputs:
         - Arn
     Description: Arn of Lambda Basic Execute Role
     Export:
-      Name: Production-Lambda-Basic-Execution-Role-Arn
+      Name: Lambda-Basic-Execution-Role-Arn
 
   DeleteIndiceJobLambdaName:
     Value: !Ref DeleteIndiceJobLambda
@@ -210,4 +210,4 @@ Outputs:
         - Arn
     Description: Arn of Delete Indice Job Lambda function
     Export:
-      Name: Production-Delete-Indice-Lambda-Arn
+      Name: Delete-Indice-Lambda-Arn

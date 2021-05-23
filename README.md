@@ -16,7 +16,7 @@
 * Deploy Stack
 
   ```bash
-  aws cloudformation deploy --capabilities CAPABILITY_IAM --stack-name Production-S3 --template-file s3/s3.yaml
+  aws cloudformation deploy --capabilities CAPABILITY_IAM --stack-name S3 --template-file s3/s3.yaml
   ```
 
 ## Steps

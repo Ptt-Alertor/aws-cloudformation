@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production ECS Host
+Description: ECS Host
 
 Parameters:
   ECSAMI:
@@ -13,7 +13,7 @@ Resources:
     Properties:
       GroupDescription: EC2 security group for docker deployment
       VpcId:
-        Fn::ImportValue: Production-VPC-VpcId
+        Fn::ImportValue: VPC-VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: "1"
@@ -103,23 +103,23 @@ Resources:
             yum -y install chrony
             service chronyd start
           - Cluster:
-              Fn::ImportValue: Production-ECS-Cluster
+              Fn::ImportValue: ECS-Cluster
             ConfigBucket:
-              Fn::ImportValue: Production-Ptt-Alertor-S3-Bucket-Name
+              Fn::ImportValue: Ptt-Alertor-S3-Bucket-Name
 
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
-      AutoScalingGroupName: Production-ECS-Hosts-AutoScalingGroup
+      AutoScalingGroupName: ECS-Hosts-AutoScalingGroup
       LaunchConfigurationName: !Ref LaunchConfiguration
       AvailabilityZones:
-        - Fn::ImportValue: Production-VPC-AvailabilityZone-A
-        - Fn::ImportValue: Production-VPC-AvailabilityZone-B
-        - Fn::ImportValue: Production-VPC-AvailabilityZone-C
+        - Fn::ImportValue: VPC-AvailabilityZone-A
+        - Fn::ImportValue: VPC-AvailabilityZone-B
+        - Fn::ImportValue: VPC-AvailabilityZone-C
       VPCZoneIdentifier:
-        - Fn::ImportValue: Production-VPC-PublicSubnet-A
-        - Fn::ImportValue: Production-VPC-PublicSubnet-B
-        - Fn::ImportValue: Production-VPC-PublicSubnet-C
+        - Fn::ImportValue: VPC-PublicSubnet-A
+        - Fn::ImportValue: VPC-PublicSubnet-B
+        - Fn::ImportValue: VPC-PublicSubnet-C
       MaxSize: 2
       MinSize: 1
       DesiredCapacity: 1
@@ -127,7 +127,7 @@ Resources:
       HealthCheckType: EC2
       Tags:
         - Key: Name
-          Value: Production-ECS-host
+          Value: ECS-host
           PropagateAtLaunch: true
         - Key: ImageId
           Value: !Ref ECSAMI
@@ -140,4 +140,4 @@ Outputs:
     Value: !Ref AutoScalingGroup
     Description: Name of Auto Scaling Group
     Export:
-      Name: Production-ECS-hosts-Auto-Scaling-Group
+      Name: ECS-hosts-Auto-Scaling-Group

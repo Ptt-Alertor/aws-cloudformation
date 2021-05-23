@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production Simple Notification Service
+Description: Simple Notification Service
 Resources:
   DinoLaiSubscription:
     Type: AWS::SNS::Subscription
@@ -42,4 +42,4 @@ Outputs:
     Value: !Ref PttAlertorSNSTopic
     Description: Arn of Ptt Alertor SNS Topic
     Export:
-      Name: Production-Ptt-Alertor-SNS-Topic-Arn
+      Name: Ptt-Alertor-SNS-Topic-Arn

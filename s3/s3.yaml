@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production Simple Storage Service
+Description: Simple Storage Service
 Resources:
   PttAlertorS3Bucket:
     Type: AWS::S3::Bucket
@@ -12,7 +12,7 @@ Outputs:
     Value: !Ref PttAlertorS3Bucket
     Description: Name of ptt-alertor-bucket
     Export:
-      Name: Production-Ptt-Alertor-S3-Bucket-Name
+      Name: Ptt-Alertor-S3-Bucket-Name
   Arn:
     Value:
       Fn::GetAtt:
@@ -20,7 +20,7 @@ Outputs:
         - Arn
     Description: Arn of ptt-alertor-bucket
     Export:
-      Name: Production-Ptt-Alertor-S3-Bucket-Arn
+      Name: Ptt-Alertor-S3-Bucket-Arn
   DomainName:
     Value:
       Fn::GetAtt:
@@ -28,4 +28,4 @@ Outputs:
         - DomainName
     Description: Domain Name of ptt-alertor-bucket
     Export:
-      Name: Production-Ptt-Alertor-S3-Bucket-Domain
+      Name: Ptt-Alertor-S3-Bucket-Domain

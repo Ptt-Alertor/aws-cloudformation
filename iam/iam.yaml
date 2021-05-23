@@ -1,6 +1,6 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production IAM
+Description: IAM
 Resources:
   CopyPttAlertorBucketPolicy:
     Type: AWS::IAM::Policy

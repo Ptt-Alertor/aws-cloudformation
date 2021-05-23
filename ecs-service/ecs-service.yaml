@@ -8,7 +8,7 @@ Resources:
       GroupDescription: EC2 security group for Application Load Balancer
       VpcId:
         Fn::ImportValue:
-          Fn::Sub: Production-VPC-VpcId
+          Fn::Sub: VPC-VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: 1
@@ -21,16 +21,16 @@ Resources:
           CidrIp: 0.0.0.0/0
       Tags:
         - Key: Name
-          Value: Production-Ptt-Alertor
+          Value: Ptt-Alertor
   CloudWatchLogGroup:
     Type: AWS::Logs::LogGroup
     Properties:
-      LogGroupName: Production-Ptt-Alertor
+      LogGroupName: Ptt-Alertor
       RetentionInDays: "400"
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      Family: Production-Ptt-Alertor
+      Family: Ptt-Alertor
       Volumes:
         - Name: env
           Host:
@@ -54,14 +54,12 @@ Resources:
               SourceVolume: env
               ReadOnly: true
           Environment:
-            - Name: APP_ENV
-              Value: Production
             - Name: Redis_EndPoint
               Value:
-                Fn::ImportValue: Production-Redis-EndPoint
+                Fn::ImportValue: Redis-EndPoint
             - Name: Redis_Port
               Value:
-                Fn::ImportValue: Production-Redis-Port
+                Fn::ImportValue: Redis-Port
           EntryPoint:
             - sh
             - "-c"
@@ -72,13 +70,12 @@ Resources:
             Options:
               awslogs-group: !Ref CloudWatchLogGroup
               awslogs-region: !Ref AWS::Region
-              awslogs-stream-prefix: Production
   EcsService:
     Type: AWS::ECS::Service
     Properties:
       ServiceName: Ptt-Alertor
       Cluster:
-        Fn::ImportValue: Production-ECS-Cluster
+        Fn::ImportValue: ECS-Cluster
       DesiredCount: 1
       TaskDefinition: !Ref TaskDefinition
       LoadBalancers:
@@ -92,9 +89,9 @@ Resources:
         - !Ref SecurityGroup
       CrossZone: true
       Subnets:
-        - Fn::ImportValue: Production-VPC-PublicSubnet-A
-        - Fn::ImportValue: Production-VPC-PublicSubnet-B
-        - Fn::ImportValue: Production-VPC-PublicSubnet-C
+        - Fn::ImportValue: VPC-PublicSubnet-A
+        - Fn::ImportValue: VPC-PublicSubnet-B
+        - Fn::ImportValue: VPC-PublicSubnet-C
       Scheme: internet-facing
       Listeners:
         - LoadBalancerPort: 80
@@ -106,17 +103,17 @@ Resources:
           Protocol: SSL
           InstanceProtocol: TCP
           SSLCertificateId:
-            Fn::ImportValue: Production-DinoLai-Cert-Arn
+            Fn::ImportValue: DinoLai-Cert-Arn
       HealthCheck:
         Target: HTTP:80/
         HealthyThreshold: 10
         UnhealthyThreshold: 2
         Interval: 30
         Timeout: 5
-      LoadBalancerName: Production-Ptt-Alertor-LB
+      LoadBalancerName: Ptt-Alertor-LB
       Tags:
         - Key: Name
-          Value: Production-Ptt-Alertor-LB
+          Value: Ptt-Alertor-LB
 Outputs:
   EcsService:
     Value:
@@ -125,17 +122,17 @@ Outputs:
         - Name
     Description: name of ecs service
     Export:
-      Name: Production-ECS-Service-Name
+      Name: ECS-Service-Name
   ElasticLoadBalancer:
     Value: !Ref ElasticLoadBalancer
     Description: name of elb
     Export:
-      Name: Production-Ptt-Alertor-ELB
+      Name: Ptt-Alertor-ELB
   CloudWatchLogGroup:
     Value: !Ref CloudWatchLogGroup
     Description: name of log group
     Export:
-      Name: Production-Ptt-Alertor-LogGroup
+      Name: Ptt-Alertor-LogGroup
   CloudWatchLogGroupArn:
     Value:
       Fn::GetAtt:
@@ -143,4 +140,4 @@ Outputs:
         - Arn
     Description: arn of log group
     Export:
-      Name: Production-Ptt-Alertor-LogGroup-Arn
+      Name: Ptt-Alertor-LogGroup-Arn

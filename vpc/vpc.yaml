@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production VPC
+Description: VPC
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -9,13 +9,13 @@ Resources:
       InstanceTenancy: default
       Tags:
         - Key: Name
-          Value: Production-VPC
+          Value: VPC
   InternetGateway:
     Type: AWS::EC2::InternetGateway
     Properties:
       Tags:
         - Key: Name
-          Value: Production Internet Gateway
+          Value: Internet Gateway
   VPCGatewayAttachment:
     Type: AWS::EC2::VPCGatewayAttachment
     Properties:
@@ -34,7 +34,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Production-PublicSubnet-RouteTable
+          Value: PublicSubnet-RouteTable
   PublicSubnetA:
     Type: AWS::EC2::Subnet
     Properties:
@@ -43,7 +43,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Production-PublicSubnet-A
+          Value: PublicSubnet-A
   PublicSubnetRouteAssociationA:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -57,7 +57,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Production-PublicSubnet-B
+          Value: PublicSubnet-B
   PublicSubnetRouteAssociationB:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -71,7 +71,7 @@ Resources:
       VpcId: !Ref VPC
       Tags:
         - Key: Name
-          Value: Production-PublicSubnet-C
+          Value: PublicSubnet-C
   PublicSubnetRouteAssociationC:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
@@ -84,52 +84,52 @@ Outputs:
     Value: !Ref PublicSubnetA
     Export:
       Name:
-        Fn::Sub: Production-VPC-PublicSubnet-A
+        Fn::Sub: VPC-PublicSubnet-A
   AvailabilityZoneA:
     Description: AvailabilityZone
     Value: us-west-2a
     Export:
       Name:
-        Fn::Sub: Production-VPC-AvailabilityZone-A
+        Fn::Sub: VPC-AvailabilityZone-A
   PublicSubnetB:
     Description: PublicSubnet
     Value: !Ref PublicSubnetB
     Export:
       Name:
-        Fn::Sub: Production-VPC-PublicSubnet-B
+        Fn::Sub: VPC-PublicSubnet-B
   AvailabilityZoneB:
     Description: AvailabilityZone
     Value: us-west-2b
     Export:
       Name:
-        Fn::Sub: Production-VPC-AvailabilityZone-B
+        Fn::Sub: VPC-AvailabilityZone-B
   PublicSubnetC:
     Description: PublicSubnet
     Value: !Ref PublicSubnetC
     Export:
       Name:
-        Fn::Sub: Production-VPC-PublicSubnet-C
+        Fn::Sub: VPC-PublicSubnet-C
   AvailabilityZoneC:
     Description: AvailabilityZone
     Value: us-west-2c
     Export:
       Name:
-        Fn::Sub: Production-VPC-AvailabilityZone-C
+        Fn::Sub: VPC-AvailabilityZone-C
   Region:
     Description: Region
     Value: us-west-2
     Export:
       Name:
-        Fn::Sub: Production-VPC-Region
+        Fn::Sub: VPC-Region
   VpcCIDR:
     Description: VpcSubnet
     Value: 172.31.0.0/16
     Export:
       Name:
-        Fn::Sub: Production-VPC-VpcCIDR
+        Fn::Sub: VPC-VpcCIDR
   VpcId:
     Description: VPC ID
     Value: !Ref VPC
     Export:
       Name:
-        Fn::Sub: Production-VPC-VpcId
+        Fn::Sub: VPC-VpcId

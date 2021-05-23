@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production Certificate Manager
+Description: Certificate Manager
 Resources:
   DinoLaiCert:
     Type: AWS::CertificateManager::Certificate
@@ -13,8 +13,6 @@ Resources:
           ValidationDomain: dinolai.com
       ValidationMethod: DNS
       Tags:
-        - Key: Environment
-          Value: Production
         - Key: Application
           Value: Ptt-Alertor
 Outputs:
@@ -22,4 +20,4 @@ Outputs:
     Value: !Ref DinoLaiCert
     Description: Arn of dinolai.com certificate
     Export:
-      Name: Production-DinoLai-Cert-Arn
+      Name: DinoLai-Cert-Arn

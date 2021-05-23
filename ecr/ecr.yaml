@@ -10,7 +10,7 @@ Outputs:
     Value: !Ref ECR
     Description: name of container registry repository
     Export:
-      Name: Production-Ptt-Alertor-ECS-Name
+      Name: Ptt-Alertor-ECS-Name
   ECRArn:
     Value:
       Fn::GetAtt:
@@ -18,4 +18,4 @@ Outputs:
         - Arn
     Description: arn of container registry repository
     Export:
-      Name: Production-Ptt-Alertor-ECS-Arn
+      Name: Ptt-Alertor-ECS-Arn

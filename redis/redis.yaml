@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Production Redis
+Description: Redis
 Resources:
   SecurityGroup:
     Type: AWS::EC2::SecurityGroup
@@ -7,32 +7,32 @@ Resources:
       GroupDescription: Allow VPC Access for Redis
       VpcId:
         Fn::ImportValue:
-          Fn::Sub: Production-VPC-VpcId
+          Fn::Sub: VPC-VpcId
       SecurityGroupIngress:
         - IpProtocol: tcp
           FromPort: "6379"
           ToPort: "6379"
           CidrIp:
             Fn::ImportValue:
-              Fn::Sub: Production-VPC-VpcCIDR
+              Fn::Sub: VPC-VpcCIDR
       SecurityGroupEgress:
         - IpProtocol: tcp
           FromPort: "6379"
           ToPort: "6379"
           CidrIp:
             Fn::ImportValue:
-              Fn::Sub: Production-VPC-VpcCIDR
+              Fn::Sub: VPC-VpcCIDR
       Tags:
         - Key: Name
-          Value: Production-Redis
+          Value: Redis
   SubnetGroup:
     Type: AWS::ElastiCache::SubnetGroup
     Properties:
       Description: Redis SubnetGroup
       SubnetIds:
-        - Fn::ImportValue: Production-VPC-PublicSubnet-A
-        - Fn::ImportValue: Production-VPC-PublicSubnet-B
-        - Fn::ImportValue: Production-VPC-PublicSubnet-C
+        - Fn::ImportValue: VPC-PublicSubnet-A
+        - Fn::ImportValue: VPC-PublicSubnet-B
+        - Fn::ImportValue: VPC-PublicSubnet-C
   Redis:
     Type: AWS::ElastiCache::CacheCluster
     Properties:
@@ -67,9 +67,9 @@ Resources:
       TreatMissingData: missing
       Unit: Percent
       AlarmActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
       OKActions:
-        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
 
 Outputs:
   RedisEndPoint:
@@ -79,7 +79,7 @@ Outputs:
         - RedisEndpoint.Address
     Description: Redis Endpoint
     Export:
-      Name: Production-Redis-EndPoint
+      Name: Redis-EndPoint
   RedisPort:
     Value:
       Fn::GetAtt:
@@ -87,4 +87,4 @@ Outputs:
         - RedisEndpoint.Port
     Description: Redis Port
     Export:
-      Name: Production-Redis-Port
+      Name: Redis-Port
