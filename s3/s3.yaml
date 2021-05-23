@@ -1,31 +1,31 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Production Simple Storage Service
 Resources:
-    PttAlertorS3Bucket:
-        Type: AWS::S3::Bucket
-        Properties:
-            BucketName: ptt-alertor-2020-bucket
-            VersioningConfiguration:
-                Status: Enabled
+  PttAlertorS3Bucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: ptt-alertor-2020-bucket
+      VersioningConfiguration:
+        Status: Enabled
 Outputs:
-    Name:
-        Value: !Ref PttAlertorS3Bucket
-        Description: Name of ptt-alertor-bucket
-        Export:
-            Name: Production-Ptt-Alertor-S3-Bucket-Name
-    Arn:
-        Value:
-            Fn::GetAtt:
-                - PttAlertorS3Bucket
-                - Arn
-        Description: Arn of ptt-alertor-bucket
-        Export:
-            Name: Production-Ptt-Alertor-S3-Bucket-Arn
-    DomainName:
-        Value:
-            Fn::GetAtt:
-                - PttAlertorS3Bucket
-                - DomainName
-        Description: Domain Name of ptt-alertor-bucket
-        Export:
-            Name: Production-Ptt-Alertor-S3-Bucket-Domain
+  Name:
+    Value: !Ref PttAlertorS3Bucket
+    Description: Name of ptt-alertor-bucket
+    Export:
+      Name: Production-Ptt-Alertor-S3-Bucket-Name
+  Arn:
+    Value:
+      Fn::GetAtt:
+        - PttAlertorS3Bucket
+        - Arn
+    Description: Arn of ptt-alertor-bucket
+    Export:
+      Name: Production-Ptt-Alertor-S3-Bucket-Arn
+  DomainName:
+    Value:
+      Fn::GetAtt:
+        - PttAlertorS3Bucket
+        - DomainName
+    Description: Domain Name of ptt-alertor-bucket
+    Export:
+      Name: Production-Ptt-Alertor-S3-Bucket-Domain
