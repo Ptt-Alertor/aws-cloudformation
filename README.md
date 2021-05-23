@@ -37,6 +37,7 @@
     * [x] update AMI
     * [x] create key pair `aws ec2 create-key-pair --key-name ecs`
   * [x] redis
+    * [x] Update engine version
   * [x] acm
     * [x] Certificate Approval
   * [x] service-ptt-alertor
@@ -46,6 +47,7 @@
     * [x] copy dashboard source from console to `cloudwatch.yml`
   * [x] elasticsearch
     * [x] migrate elasticsearch and kibana setting
+    * [x] Update elasticsearch version
 * [x] stop service in former account
   * [x] update ECS Service's Number of tasks to 0
   * [x] docker stop container
