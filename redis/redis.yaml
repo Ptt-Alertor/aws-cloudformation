@@ -48,6 +48,29 @@ Resources:
       VpcSecurityGroupIds:
         - !Ref SecurityGroup
 
+  RedisMemoryUsageAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmName: Ptt Alertor Redis Utilization
+      AlarmDescription: Redis Memory Exhausted
+      Namespace: AWS/ElastiCache
+      Dimensions:
+        - Name: CacheClusterId
+          Value: !Ref Redis
+      MetricName: DatabaseMemoryUsagePercentage
+      Period: 300
+      Statistic: Average
+      ComparisonOperator: GreaterThanThreshold
+      Threshold: 95
+      EvaluationPeriods: 1
+      TreatMissingData: missing
+      Unit: Percent
+      AlarmActions:
+        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+      OKActions:
+        - Fn::ImportValue: Production-Ptt-Alertor-SNS-Topic-Arn
+
 Outputs:
   RedisEndPoint:
     Value:
