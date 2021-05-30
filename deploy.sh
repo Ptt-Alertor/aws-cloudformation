@@ -13,7 +13,9 @@ aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-C
 
 aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Hosts --template-file ecs-hosts/ecs-hosts.yaml
 
-aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Redis --template-file redis/redis.json
+aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Redis --template-file redis/redis.yaml
+
+aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name DynamoDB --template-file dynamodb/dynamodb.yaml
 
 aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ACM --template-file acm/acm.yaml
 

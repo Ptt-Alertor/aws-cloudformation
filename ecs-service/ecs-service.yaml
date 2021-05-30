@@ -27,6 +27,20 @@ Resources:
     Properties:
       LogGroupName: Ptt-Alertor
       RetentionInDays: "400"
+  EcsTaskRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ecs-tasks.amazonaws.com
+            Action:
+              - sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
@@ -60,6 +74,8 @@ Resources:
             - Name: Redis_Port
               Value:
                 Fn::ImportValue: Redis-Port
+            - Name: AWS_REGION
+              Value: !Ref "AWS::Region"
           EntryPoint:
             - sh
             - "-c"
@@ -70,6 +86,7 @@ Resources:
             Options:
               awslogs-group: !Ref CloudWatchLogGroup
               awslogs-region: !Ref AWS::Region
+          TaskRoleArn: !GetAtt EcsTaskRole.Arn
   EcsService:
     Type: AWS::ECS::Service
     Properties:

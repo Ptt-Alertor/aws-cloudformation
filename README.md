@@ -38,6 +38,7 @@
     * [x] create key pair `aws ec2 create-key-pair --key-name ecs`
   * [x] redis
     * [x] Update engine version
+  * [x] dynamodb
   * [x] acm
     * [x] Certificate Approval
   * [x] service-ptt-alertor

@@ -1,0 +1,22 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: DynamoDB
+Resources:
+  ArticlesTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: articles
+      ProvisionedThroughput:
+        ReadCapacityUnits: "25"
+        WriteCapacityUnits: "25"
+      AttributeDefinitions:
+        - AttributeName: "Code"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Code"
+          KeyType: "HASH"
+Outputs:
+  ArticlesTable:
+    Value: !Ref ArticlesTable
+    Description: name of articles table
+    Export:
+      Name: DynamoDB-Articles-Table-Name
