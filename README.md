@@ -1,5 +1,7 @@
 # Ptt Alertor AWS Cloudformation
 
+![main workflow](https://github.com/meifamily/aws-cloudformation/actions/workflows/main.yml/badge.svg)
+
 ## Architecture
 
 ![architecture](ptt_alertor_architecture.png)
@@ -52,6 +54,7 @@
 * [x] stop service in former account
   * [x] update ECS Service's Number of tasks to 0
   * [x] docker stop container
+* [x] migrate dynamodb
 * [x] migrate redis db
 * [x] DNS change
 * [x] setting [ptt-alertor](https://github.com/meifamily/ptt-alertor) travis ci
