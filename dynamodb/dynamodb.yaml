@@ -6,17 +6,37 @@ Resources:
     Properties:
       TableName: articles
       ProvisionedThroughput:
-        ReadCapacityUnits: "25"
-        WriteCapacityUnits: "25"
+        ReadCapacityUnits: "10"
+        WriteCapacityUnits: "15"
       AttributeDefinitions:
         - AttributeName: "Code"
           AttributeType: "S"
       KeySchema:
         - AttributeName: "Code"
           KeyType: "HASH"
+
+  BoardsTable:
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: boards
+      ProvisionedThroughput:
+        ReadCapacityUnits: "15"
+        WriteCapacityUnits: "10"
+      AttributeDefinitions:
+        - AttributeName: "Board"
+          AttributeType: "S"
+      KeySchema:
+        - AttributeName: "Board"
+          KeyType: "HASH"
+
 Outputs:
   ArticlesTable:
     Value: !Ref ArticlesTable
     Description: name of articles table
     Export:
       Name: DynamoDB-Articles-Table-Name
+  BoardsTable:
+    Value: !Ref BoardsTable
+    Description: name of boards table
+    Export:
+      Name: DynamoDB-Boards-Table-Name
