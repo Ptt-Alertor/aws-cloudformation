@@ -167,6 +167,30 @@ Resources:
           - LogsToElasticsearchLambda
           - Arn
 
+  ElasticsearchFreeStorageSpaceAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Properties:
+      ActionsEnabled: true
+      AlarmName: Elasticsearch Storage Space Exhausted
+      AlarmDescription: clean command example, DELETE /cwl-2021.05.10
+      Namespace: AWS/ES
+      Dimensions:
+        - Name: DomainName
+          Value: !Ref PttAlertorElasticsearch
+        - Name: ClientId
+          Value: !Ref "AWS::AccountId"
+      MetricName: FreeStorageSpace
+      Period: 60
+      Statistic: Minimum
+      ComparisonOperator: LessThanThreshold
+      Threshold: 100
+      EvaluationPeriods: 5
+      TreatMissingData: missing
+      AlarmActions:
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
+      OKActions:
+        - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
+
 Outputs:
   PttAlertorElasticsearchEndPoint:
     Value:
