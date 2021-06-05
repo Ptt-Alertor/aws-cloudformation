@@ -5,7 +5,7 @@ name: CI
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
-  push:
+  pull_request:
     branches: [master]
 
   # Allows you to run this workflow manually from the Actions tab
@@ -19,7 +19,7 @@ env:
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   # This workflow contains a single job called "build"
-  deploy:
+  validate:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
@@ -30,4 +30,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: DynamoDB
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name DynamoDB --template-file dynamodb/dynamodb.yaml
+        run: aws cloudformation validate-template --template-body file://./dynamodb/dynamodb.yaml
