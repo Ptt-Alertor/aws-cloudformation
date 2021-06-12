@@ -1,6 +1,6 @@
 # Ptt Alertor AWS Cloudformation
 
-![main workflow](https://github.com/meifamily/aws-cloudformation/actions/workflows/main.yml/badge.svg)
+![main workflow](https://github.com/Ptt-Alertor/aws-cloudformation/actions/workflows/main.yml/badge.svg)
 
 ## Architecture
 
@@ -57,7 +57,7 @@
 * [x] migrate dynamodb
 * [x] migrate redis db
 * [x] DNS change
-* [x] setting [ptt-alertor](https://github.com/meifamily/ptt-alertor) travis ci
+* [x] setting [ptt-alertor](https://github.com/Ptt-Alertor/ptt-alertor) travis ci
   * [x] AWS_ACCESS_KEY_ID
   * [x] AWS_SECRET_ACCESS_KEY in [secure](https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables)
   * [x] AWS_Docker_Repo
