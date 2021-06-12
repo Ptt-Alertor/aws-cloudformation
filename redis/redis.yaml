@@ -71,6 +71,16 @@ Resources:
       OKActions:
         - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
 
+  RedisEndPointSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: RedisEndPoint
+      Type: String
+      Value:
+        Fn::GetAtt:
+          - Redis
+          - RedisEndpoint.Address
+
 Outputs:
   RedisEndPoint:
     Value:
