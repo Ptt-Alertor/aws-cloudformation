@@ -61,6 +61,7 @@ Resources:
             Fn::GetAtt:
               - PttAlertorElasticsearch
               - DomainEndpoint
+          RETENTION_DAYS: 22
       FunctionName: Delete_ES_Indice
       Handler: delete_elasticsearch_indice.lambda_handler
       Role:
