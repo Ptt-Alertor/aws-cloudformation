@@ -32,6 +32,14 @@ jobs:
       - name: IAM
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name IAM --template-file iam/iam.yaml
 
+      - name: SNS
+        run: |
+          aws cloudformation deploy --stack-name SNS --template-file sns/sns.yaml \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --parameter-overrides SlackWebhookURL=${SLACK_WEBHOOK_URL}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
       - name: S3
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name S3 --template-file s3/s3.yaml
 
@@ -55,7 +63,6 @@ jobs:
 
       - name: ACM
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ACM --template-file acm/acm.yaml
-      # - name: SNS
-      #   run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name SNS --template-file sns/sns.yaml
-      # - name: Elasticsearch
-      #   run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml
+
+      - name: Elasticsearch
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml

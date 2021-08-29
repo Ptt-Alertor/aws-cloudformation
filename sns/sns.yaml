@@ -1,41 +1,60 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Simple Notification Service
+
+Parameters:
+  SlackWebhookURL:
+    Type: String
+
 Resources:
-  DinoLaiSubscription:
-    Type: AWS::SNS::Subscription
+  LambdaSNSExecutionRole:
+    Type: AWS::IAM::Role
     Properties:
-      Endpoint: dinos80152@gmail.com
-      Protocol: email
-      TopicArn: !Ref PttAlertorSNSTopic
-  LiamLaiSubscription:
-    Type: AWS::SNS::Subscription
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+
+  LambdaSNSExecutionInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
     Properties:
-      Endpoint: liam.icheng.lai@gmail.com
-      Protocol: email
-      TopicArn: !Ref PttAlertorSNSTopic
-  BirdyYangSubscription:
-    Type: AWS::SNS::Subscription
+      Path: "/"
+      Roles:
+        - !Ref LambdaSNSExecutionRole
+
+  SNStoSlackLambda:
+    Type: AWS::Lambda::Function
     Properties:
-      Endpoint: maydayjean@gmail.com
-      Protocol: email
-      TopicArn: !Ref PttAlertorSNSTopic
-  ScottKaoSubscription:
-    Type: AWS::SNS::Subscription
-    Properties:
-      Endpoint: scottxxx666@gmail.com
-      Protocol: email
-      TopicArn: !Ref PttAlertorSNSTopic
+      Code:
+        S3Bucket:
+          Fn::ImportValue: Ptt-Alertor-S3-Bucket-Name
+        S3Key: lambdas/sns_to_slack.zip
+      Description: SNS to Slack
+      Environment:
+        Variables:
+          SLACK_CHANNEL: alarm
+          SLACK_WEBHOOK_URL: !Ref SlackWebhookURL
+      FunctionName: SNSToSlack
+      Handler: sns_to_slack.lambda_handler
+      Role:
+        Fn::GetAtt:
+          - LambdaSNSExecutionRole
+          - Arn
+      Runtime: python3.9
+      Timeout: 60
+
   PttAlertorSNSTopic:
     Type: AWS::SNS::Topic
     Properties:
       DisplayName: PttAlertor
       Subscription:
-        - Endpoint: dinos80152@gmail.com
-          Protocol: email
-        - Endpoint: liam.icheng.lai@gmail.com
-          Protocol: email
-        - Endpoint: maydayjean@gmail.com
-          Protocol: email
+        - Endpoint: !GetAtt SNStoSlackLambda.Arn
+          Protocol: lambda
       TopicName: Ptt-Alertor-Alarm
 Outputs:
   PttAlertorSNSTopicArn:
