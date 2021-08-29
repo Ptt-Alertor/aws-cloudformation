@@ -38,33 +38,33 @@ Resources:
       Groups:
         - manager
       LoginProfile:
-        Password: p@ssword
+        Password: P@ssw0rd
         PasswordResetRequired: true
       UserName: dinos80152
-  LiamLaiIAMUsers:
-    Type: AWS::IAM::User
-    Properties:
-      Groups:
-        - manager
-      LoginProfile:
-        Password: p@ssword
-        PasswordResetRequired: true
-      UserName: liam-lai
-  BirdyYangIAMUsers:
-    Type: AWS::IAM::User
-    Properties:
-      Groups:
-        - manager
-      LoginProfile:
-        Password: p@ssword
-        PasswordResetRequired: true
-      UserName: birdyyang
+  # LiamLaiIAMUsers:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     Groups:
+  #       - manager
+  #     LoginProfile:
+  #       Password: P@ssw0rd
+  #       PasswordResetRequired: true
+  #     UserName: liam-lai
+  # BirdyYangIAMUsers:
+  #   Type: AWS::IAM::User
+  #   Properties:
+  #     Groups:
+  #       - manager
+  #     LoginProfile:
+  #       Password: P@ssw0rd
+  #       PasswordResetRequired: true
+  #     UserName: birdyyang
   ScottKaoIAMUsers:
     Type: AWS::IAM::User
     Properties:
       Groups:
         - manager
       LoginProfile:
-        Password: p@ssword
+        Password: P@ssw0rd
         PasswordResetRequired: true
       UserName: scottkao
