@@ -30,7 +30,6 @@
   * [x] s3
     * [x] new s3 bucket name
     * [x] add bucket policy to old bucket
-    * [x] migrate s3 folders and files
   * [x] redis
     * [x] Update engine version
   * [x] acm
