@@ -7,5 +7,5 @@
 * update lambda function from s3 zip file
 
     ```console
-    aws lambda update-function-code --function-name Delete_ES_Indice --s3-bucket ptt-alertor-2020-bucket --s3-key lambdas/delete_elasticsearch_indice.zip
+    aws lambda update-function-code --function-name Delete_ES_Indice --s3-bucket ptt-alertor-2021-bucket --s3-key lambdas/delete_elasticsearch_indice.zip
     ```

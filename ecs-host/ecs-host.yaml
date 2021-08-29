@@ -51,8 +51,8 @@ Resources:
                   - s3:GetObject
                   - s3:ListBucket
                 Resource:
-                  - arn:aws:s3:::ptt-alertor-2020-bucket
-                  - arn:aws:s3:::ptt-alertor-2020-bucket/*
+                  - arn:aws:s3:::ptt-alertor-2021-bucket
+                  - arn:aws:s3:::ptt-alertor-2021-bucket/*
                 Sid: ConfigReadAccess
         - PolicyName: ecsAccess
           PolicyDocument:

@@ -17,8 +17,8 @@
                 "Principal": {"AWS": "222222222222"},
                 "Action": ["s3:ListBucket","s3:GetObject"],
                 "Resource": [
-                    "arn:aws:s3:::ptt-alertor-2-bucket/*",
-                    "arn:aws:s3:::ptt-alertor-2-bucket"
+                    "arn:aws:s3:::ptt-alertor-2020-bucket/*",
+                    "arn:aws:s3:::ptt-alertor-2020-bucket"
                 ]
             }
         ]
@@ -28,7 +28,7 @@
 1. execute aws s3 sync command
 
     ```console
-    aws s3 sync s3://ptt-alertor-2-bucket s3://ptt-alertor-2020-bucket
+    aws s3 sync s3://ptt-alertor-2020-bucket s3://ptt-alertor-2021-bucket
     ```
 
 * [transfer bucket files to another one](https://aws.amazon.com/tw/premiumsupport/knowledge-center/account-transfer-s3/)
