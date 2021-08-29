@@ -65,6 +65,7 @@ Resources:
         - Name: env
           Host:
             SourcePath: "/etc/ecs/.env"
+      TaskRoleArn: !GetAtt EcsTaskRole.Arn
       ContainerDefinitions:
         - Name: Ptt-Alertor
           Image:
@@ -102,7 +103,6 @@ Resources:
             Options:
               awslogs-group: !Ref CloudWatchLogGroup
               awslogs-region: !Ref AWS::Region
-          TaskRoleArn: !GetAtt EcsTaskRole.Arn
   EcsService:
     Type: AWS::ECS::Service
     Properties:
