@@ -6,7 +6,8 @@ name: Deploy AWS
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches: [master]
+    branches:
+      - master
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -28,6 +29,46 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      # Runs a single command using the runners shell
+      - name: IAM
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name IAM --template-file iam/iam.yaml
+
+      - name: SNS
+        run: |
+          aws cloudformation deploy --stack-name SNS --template-file sns/sns.yaml \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --parameter-overrides SlackWebhookURL=${SLACK_WEBHOOK_URL}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+      - name: S3
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name S3 --template-file s3/s3.yaml
+
+      - name: VPC
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name VPC --template-file vpc/vpc.yaml
+
+      - name: ECR
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECR --template-file ecr/ecr.yaml
+
+      - name: Redis
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Redis --template-file redis/redis.yaml
+
       - name: DynamoDB
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name DynamoDB --template-file dynamodb/dynamodb.yaml
+
+      - name: ACM
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ACM --template-file acm/acm.yaml
+
+      - name: ECS-Cluster
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Cluster --template-file ecs-cluster/ecs-cluster.yaml
+
+      - name: ECS-Host
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Host --template-file ecs-host/ecs-host.yaml
+
+      - name: ECS-Service
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Service --template-file ecs-service/ecs-service.yaml
+
+      - name: CloudWatch
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name CloudWatch --template-file cloudwatch/cloudwatch.yaml
+
+      - name: Elasticsearch
+        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml

@@ -63,6 +63,3 @@ jobs:
 
       - name: ACM
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ACM --template-file acm/acm.yaml
-
-      - name: Elasticsearch
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml
