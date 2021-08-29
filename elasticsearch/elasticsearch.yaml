@@ -21,9 +21,9 @@ Resources:
       ElasticsearchClusterConfig:
         DedicatedMasterEnabled: false
         InstanceCount: 1
-        InstanceType: t2.small.elasticsearch
+        InstanceType: t3.small.elasticsearch
         ZoneAwarenessEnabled: false
-      ElasticsearchVersion: "7.7"
+      ElasticsearchVersion: "7.10"
 
   LambdaBasicExecutionRole:
     Type: AWS::IAM::Role
