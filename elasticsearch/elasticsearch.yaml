@@ -24,6 +24,8 @@ Resources:
         ZoneAwarenessEnabled: false
       DomainEndpointOptions:
         EnforceHTTPS: true
+      EncryptionAtRestOptions:
+        Enabled: true
       NodeToNodeEncryptionOptions:
         Enabled: true
       AdvancedSecurityOptions:
