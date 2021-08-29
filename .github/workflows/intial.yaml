@@ -30,7 +30,12 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: IAM
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name IAM --template-file iam/iam.yaml
+        run:
+          aws cloudformation deploy --stack-name IAM --template-file iam/iam.yaml \
+          --capabilities CAPABILITY_NAMED_IAM \
+          --parameter-overrides DefaultPassword=${DEFAULT_PASSWORD}
+        env:
+          DEFAULT_PASSWORD: ${{ secrets.DEFAULT_PASSWORD }}
 
       - name: SNS
         run: |

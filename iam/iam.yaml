@@ -1,6 +1,11 @@
 ---
 AWSTemplateFormatVersion: "2010-09-09"
 Description: IAM
+
+Parameters:
+  DefaultPassword:
+    Type: String
+
 Resources:
   CopyPttAlertorBucketPolicy:
     Type: AWS::IAM::Policy
@@ -39,25 +44,25 @@ Resources:
       Groups:
         - manager
       LoginProfile:
-        Password: P@ssw0rd
+        Password: !Ref DefaultPassword
         PasswordResetRequired: true
       UserName: dinos80152
-  # LiamLaiIAMUsers:
-  #   Type: AWS::IAM::User
-  #   Properties:
-  #     Groups:
-  #       - manager
-  #     LoginProfile:
-  #       Password: P@ssw0rd
-  #       PasswordResetRequired: true
-  #     UserName: liam-lai
+  LiamLaiIAMUsers:
+    Type: AWS::IAM::User
+    Properties:
+      Groups:
+        - manager
+      LoginProfile:
+        Password: !Ref DefaultPassword
+        PasswordResetRequired: true
+      UserName: liam-lai
   # BirdyYangIAMUsers:
   #   Type: AWS::IAM::User
   #   Properties:
   #     Groups:
   #       - manager
   #     LoginProfile:
-  #       Password: P@ssw0rd
+  #       Password: !Ref DefaultPassword
   #       PasswordResetRequired: true
   #     UserName: birdyyang
   ScottKaoIAMUsers:
@@ -66,6 +71,6 @@ Resources:
       Groups:
         - manager
       LoginProfile:
-        Password: P@ssw0rd
+        Password: !Ref DefaultPassword
         PasswordResetRequired: true
       UserName: scottkao
