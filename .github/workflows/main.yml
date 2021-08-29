@@ -76,4 +76,12 @@ jobs:
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name CloudWatch --template-file cloudwatch/cloudwatch.yaml
 
       - name: Elasticsearch
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml
+        run: |
+          aws cloudformation deploy --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml \
+            --capabilities CAPABILITY_NAMED_IAM \
+            --parameter-overrides \
+            ESMasterUserName=${ES_MASTER_USERNAME} \
+            ESMasterUserPassword=${ES_MASTER_PASSWORD}
+        env:
+          ES_MASTER_USERNAME: ${{ secrets.ES_MASTER_USERNAME }}
+          ES_MASTER_PASSWORD: ${{ secrets.ES_MASTER_PASSWORD }}

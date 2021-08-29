@@ -1,5 +1,12 @@
 AWSTemplateFormatVersion: "2010-09-09"
 Description: Elasticsearch Service With Lambda
+
+Parameters:
+  ESMasterUserName:
+    Type: String
+  ESMasterUserPassword:
+    Type: String
+
 Resources:
   PttAlertorElasticsearch:
     Type: AWS::Elasticsearch::Domain
@@ -24,6 +31,12 @@ Resources:
         InstanceType: t3.small.elasticsearch
         ZoneAwarenessEnabled: false
       ElasticsearchVersion: "7.10"
+      AdvancedSecurityOptions:
+        Enabled: true
+        InternalUserDatabaseEnabled: true
+        MasterUserOptions:
+          MasterUserName: !Ref ESMasterUserName
+          MasterUserPassword: !Ref ESMasterUserPassword
 
   LambdaBasicExecutionRole:
     Type: AWS::IAM::Role
