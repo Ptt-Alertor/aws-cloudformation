@@ -1,13 +1,13 @@
 # This is a basic workflow to help you get started with Actions
 
-name: Deploy AWS
+name: Initial AWS
 
 # Controls when the action will run.
 on:
   # Triggers the workflow on push or pull request events but only for the master branch
   push:
-    branches:
-      - master
+    tags:
+      - initial
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -48,11 +48,17 @@ jobs:
       - name: S3
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name S3 --template-file s3/s3.yaml
 
+      - name: Migrate S3 from Old Account
+        run: aws s3 sync s3://ptt-alertor-2020-bucket s3://ptt-alertor-2021-bucket
+
       - name: VPC
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name VPC --template-file vpc/vpc.yaml
 
       - name: ECR
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECR --template-file ecr/ecr.yaml
+
+      - name: Create Key Pair for ECS-Host
+        run: aws ec2 create-key-pair --key-name ecs
 
       - name: Redis
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Redis --template-file redis/redis.yaml
@@ -62,18 +68,3 @@ jobs:
 
       - name: ACM
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ACM --template-file acm/acm.yaml
-
-      - name: ECS-Cluster
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Cluster --template-file ecs-cluster/ecs-cluster.yaml
-
-      - name: ECS-Host
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Host --template-file ecs-host/ecs-host.yaml
-
-      - name: ECS-Service
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECS-Service --template-file ecs-service/ecs-service.yaml
-
-      - name: CloudWatch
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name CloudWatch --template-file cloudwatch/cloudwatch.yaml
-
-      - name: Elasticsearch
-        run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml

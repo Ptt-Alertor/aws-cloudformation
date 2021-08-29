@@ -41,7 +41,7 @@ Resources:
       CacheNodeType: cache.t3.micro
       CacheSubnetGroupName: !Ref SubnetGroup
       Engine: redis
-      EngineVersion: 5.0.0
+      EngineVersion: 6.x
       NumCacheNodes: "1"
       Port: "6379"
       PreferredMaintenanceWindow: sun:05:00-sun:09:00

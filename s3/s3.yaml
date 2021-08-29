@@ -4,7 +4,7 @@ Resources:
   PttAlertorS3Bucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: ptt-alertor-2020-bucket
+      BucketName: ptt-alertor-2021-bucket
       VersioningConfiguration:
         Status: Enabled
 Outputs:
