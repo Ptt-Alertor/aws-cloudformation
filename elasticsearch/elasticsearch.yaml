@@ -12,15 +12,7 @@ Resources:
     Type: AWS::Elasticsearch::Domain
     Properties:
       DomainName: ptt-alertor
-      AccessPolicies:
-        Version: "2012-10-17"
-        Statement:
-          - Effect: Allow
-            Principal:
-              AWS:
-                - "*"
-            Action: es:*
-            Resource: !Sub "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/ptt-alertor/*"
+      ElasticsearchVersion: "7.10"
       EBSOptions:
         EBSEnabled: true
         VolumeSize: 10
@@ -30,13 +22,25 @@ Resources:
         InstanceCount: 1
         InstanceType: t3.small.elasticsearch
         ZoneAwarenessEnabled: false
-      ElasticsearchVersion: "7.10"
+      DomainEndpointOptions:
+        EnforceHTTPS: true
+      NodeToNodeEncryptionOptions:
+        Enabled: true
       AdvancedSecurityOptions:
         Enabled: true
         InternalUserDatabaseEnabled: true
         MasterUserOptions:
           MasterUserName: !Ref ESMasterUserName
           MasterUserPassword: !Ref ESMasterUserPassword
+      AccessPolicies:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS:
+                - "*"
+            Action: es:*
+            Resource: !Sub "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/ptt-alertor/*"
 
   LambdaBasicExecutionRole:
     Type: AWS::IAM::Role
