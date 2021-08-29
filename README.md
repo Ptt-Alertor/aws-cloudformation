@@ -25,40 +25,32 @@
 
 * [x] Create AWS Account by new Email
 * [x] Create IAM User: *deploy* with Administrator Access Permission
-* [x] [Configure AWS CLI](https://docs.aws.amazon.com/en_us/cli/latest/userguide/cli-chap-getting-started.html)
-* [x] Use deploy to create IAM stack
-* [x] Re-configure AWS CLI as your own IAM user
-* [x] Create Stack in order
+* [x] Update AWS Credential in Github Organization Secrets
+* [x] Update Stack
   * [x] s3
     * [x] new s3 bucket name
+    * [x] add bucket policy to old bucket
     * [x] migrate s3 folders and files
-  * [x] vpc
-  * [x] ecr
-  * [x] ecs-cluster
-  * [x] ecs-hosts
-    * [x] update AMI
-    * [x] create key pair `aws ec2 create-key-pair --key-name ecs`
   * [x] redis
     * [x] Update engine version
-  * [x] dynamodb
   * [x] acm
     * [x] Certificate Approval
-  * [x] service-ptt-alertor
-    * [x] push image on ECR
-  * [x] sns
   * [x] cloudwatch
     * [x] copy dashboard source from console to `cloudwatch.yml`
   * [x] elasticsearch
     * [x] migrate elasticsearch and kibana setting
     * [x] Update elasticsearch version
-* [x] stop service in former account
-  * [x] update ECS Service's Number of tasks to 0
-  * [x] docker stop container
-* [x] migrate dynamodb
-* [x] migrate redis db
-* [x] DNS change
-* [x] setting [ptt-alertor](https://github.com/Ptt-Alertor/ptt-alertor) travis ci
-  * [x] AWS_ACCESS_KEY_ID
-  * [x] AWS_SECRET_ACCESS_KEY in [secure](https://docs.travis-ci.com/user/environment-variables/#encrypting-environment-variables)
-  * [x] AWS_Docker_Repo
-* [x] delete former account stacks
+* [x] tag `initial` to initial environment
+* [x] migrate ptt-alertor
+  * [x] service-ptt-alertor
+    * [x] push image to ECR
+  * [x] stop service in former account
+    * [x] update ECS Service's Number of tasks to 0
+    * [x] docker stop container
+  * [x] dynamodb
+    * [x] export to s3
+    * [x] use glue data pipeline to recover db in new account
+  * [x] migrate redis db
+  * [x] DNS change
+  * [x] update [ptt-alertor](https://github.com/Ptt-Alertor/ptt-alertor) task definition
+* [x] deactivate former account
