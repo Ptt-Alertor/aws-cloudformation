@@ -61,11 +61,8 @@ Resources:
     Type: AWS::ECS::TaskDefinition
     Properties:
       Family: Ptt-Alertor
-      Volumes:
-        - Name: env
-          Host:
-            SourcePath: "/etc/ecs/.env"
       TaskRoleArn: !GetAtt EcsTaskRole.Arn
+      ExecutionRoleArn: !GetAtt EcsExecutionRole.Arn
       ContainerDefinitions:
         - Name: Ptt-Alertor
           Image:
@@ -80,24 +77,24 @@ Resources:
               HostPort: 33008
             - ContainerPort: 6060
               HostPort: 33009
-          MountPoints:
-            - ContainerPath: "/.env"
-              SourceVolume: env
-              ReadOnly: true
+          EnvironmentFiles:
+            - Type: s3
+              Value: !Sub
+                - ${S3}/.env
+                - S3: !ImportValue Ptt-Alertor-S3-Bucket-Arn
           Environment:
-            - Name: Redis_EndPoint
-              Value:
-                Fn::ImportValue: Redis-EndPoint
-            - Name: Redis_Port
+            - Name: REDIS_PORT
               Value:
                 Fn::ImportValue: Redis-Port
             - Name: AWS_REGION
               Value: !Ref "AWS::Region"
+          Secrets:
+            - Name: REDIS_ENDPOINT
+              ValueFrom: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/RedisEndPoint
+            - Name: S3_DOMAIN
+              ValueFrom: !Sub arn:aws:ssm:${AWS::Region}:${AWS::AccountId}:parameter/S3DomainName
           EntryPoint:
-            - sh
-            - "-c"
-          Command:
-            - export $(cat /.env | grep -v ^# | xargs);./ptt-alertor
+            - ./ptt-alertor
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -149,10 +146,7 @@ Resources:
           Value: Ptt-Alertor-LB
 Outputs:
   EcsService:
-    Value:
-      Fn::GetAtt:
-        - EcsService
-        - Name
+    Value: !GetAtt EcsService.Name
     Description: name of ecs service
     Export:
       Name: ECS-Service-Name
@@ -167,10 +161,7 @@ Outputs:
     Export:
       Name: Ptt-Alertor-LogGroup
   CloudWatchLogGroupArn:
-    Value:
-      Fn::GetAtt:
-        - CloudWatchLogGroup
-        - Arn
+    Value: !GetAtt CloudWatchLogGroup.Arn
     Description: arn of log group
     Export:
       Name: Ptt-Alertor-LogGroup-Arn
