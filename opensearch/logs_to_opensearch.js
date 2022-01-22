@@ -6,33 +6,33 @@ var crypto = require('crypto');
 var endpoint = process.env.ELASTICSEARCH_ENDPOINT;
 
 // Set this to true if you want to debug why data isn't making it to
-// your Elasticsearch cluster. This will enable logging of failed items
+// your OpenSearch cluster. This will enable logging of failed items
 // to CloudWatch Logs.
 var logFailedResponses = false;
 
-exports.handler = function(input, context) {
+exports.handler = function (input, context) {
     // decode input from base64
     var zippedInput = new Buffer.from(input.awslogs.data, 'base64');
 
     // decompress the input
-    zlib.gunzip(zippedInput, function(error, buffer) {
+    zlib.gunzip(zippedInput, function (error, buffer) {
         if (error) { context.fail(error); return; }
 
         // parse the input from JSON
         var awslogsData = JSON.parse(buffer.toString('utf8'));
 
-        // transform the input to Elasticsearch documents
-        var elasticsearchBulkData = transform(awslogsData);
+        // transform the input to OpenSearch documents
+        var opensearchBulkData = transform(awslogsData);
 
         // skip control messages
-        if (!elasticsearchBulkData) {
+        if (!opensearchBulkData) {
             console.log('Received a control message');
             context.succeed('Control message handled successfully');
             return;
         }
 
-        // post documents to the Amazon Elasticsearch Service
-        post(elasticsearchBulkData, function(error, success, statusCode, failedItems) {
+        // post documents to the Amazon OpenSearch Service
+        post(opensearchBulkData, function (error, success, statusCode, failedItems) {
             console.log('Response: ' + JSON.stringify({
                 "statusCode": statusCode
             }));
@@ -55,7 +55,7 @@ function transform(payload) {
 
     var bulkRequestBody = '';
 
-    payload.logEvents.forEach(function(logEvent) {
+    payload.logEvents.forEach(function (logEvent) {
         var timestamp = new Date(1 * logEvent.timestamp);
 
         // index name format: cwl-YYYY.MM.DD
@@ -139,20 +139,20 @@ function isNumeric(n) {
 function post(body, callback) {
     var requestParams = buildRequest(endpoint, body);
 
-    var request = https.request(requestParams, function(response) {
+    var request = https.request(requestParams, function (response) {
         var responseBody = '';
-        response.on('data', function(chunk) {
+        response.on('data', function (chunk) {
             responseBody += chunk;
         });
 
-        response.on('end', function() {
+        response.on('end', function () {
             var info = JSON.parse(responseBody);
             var failedItems;
             var success;
             var error;
 
             if (response.statusCode >= 200 && response.statusCode < 299) {
-                failedItems = info.items.filter(function(x) {
+                failedItems = info.items.filter(function (x) {
                     return x.index.status >= 300;
                 });
 
@@ -175,7 +175,7 @@ function post(body, callback) {
 
             callback(error, success, response.statusCode, failedItems);
         });
-    }).on('error', function(e) {
+    }).on('error', function (e) {
         callback(e);
     });
     request.end(requestParams.body);
@@ -207,12 +207,12 @@ function buildRequest(endpoint, body) {
     };
 
     var canonicalHeaders = Object.keys(request.headers)
-        .sort(function(a, b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; })
-        .map(function(k) { return k.toLowerCase() + ':' + request.headers[k]; })
+        .sort(function (a, b) { return a.toLowerCase() < b.toLowerCase() ? -1 : 1; })
+        .map(function (k) { return k.toLowerCase() + ':' + request.headers[k]; })
         .join('\n');
 
     var signedHeaders = Object.keys(request.headers)
-        .map(function(k) { return k.toLowerCase(); })
+        .map(function (k) { return k.toLowerCase(); })
         .sort()
         .join(';');
 
@@ -224,14 +224,14 @@ function buildRequest(endpoint, body) {
         hash(request.body, 'hex'),
     ].join('\n');
 
-    var credentialString = [ date, region, service, 'aws4_request' ].join('/');
+    var credentialString = [date, region, service, 'aws4_request'].join('/');
 
     var stringToSign = [
         'AWS4-HMAC-SHA256',
         datetime,
         credentialString,
         hash(canonicalString, 'hex')
-    ] .join('\n');
+    ].join('\n');
 
     request.headers.Authorization = [
         'AWS4-HMAC-SHA256 Credential=' + process.env.AWS_ACCESS_KEY_ID + '/' + credentialString,

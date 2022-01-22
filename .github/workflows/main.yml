@@ -75,9 +75,9 @@ jobs:
       - name: CloudWatch
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name CloudWatch --template-file cloudwatch/cloudwatch.yaml
 
-      - name: Elasticsearch
+      - name: OpenSearch
         run: |
-          aws cloudformation deploy --stack-name Elasticsearch --template-file elasticsearch/elasticsearch.yaml \
+          aws cloudformation deploy --stack-name OpenSearch --template-file opensearch/opensearch.yaml \
             --capabilities CAPABILITY_NAMED_IAM \
             --parameter-overrides \
             ESMasterUserName=${ES_MASTER_USERNAME} \
