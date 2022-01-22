@@ -31,3 +31,6 @@ jobs:
       # Runs a single command using the runners shell
       - name: DynamoDB
         run: aws cloudformation validate-template --template-body file://./dynamodb/dynamodb.yaml
+
+      - name: OpenSearch
+        run: aws cloudformation validate-template --template-body file://./opensearch/opensearch.yaml
