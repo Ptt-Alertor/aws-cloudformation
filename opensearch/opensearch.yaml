@@ -1,5 +1,5 @@
 AWSTemplateFormatVersion: "2010-09-09"
-Description: Elasticsearch Service With Lambda
+Description: OpenSearch Service With Lambda
 
 Parameters:
   ESMasterUserName:
@@ -8,19 +8,19 @@ Parameters:
     Type: String
 
 Resources:
-  PttAlertorElasticsearch:
-    Type: AWS::Elasticsearch::Domain
+  PttAlertorOpenSearch:
+    Type: AWS::OpenSearchService::Domain
     Properties:
       DomainName: ptt-alertor
-      ElasticsearchVersion: "7.10"
+      EngineVersion: OpenSearch_1.1
       EBSOptions:
         EBSEnabled: true
         VolumeSize: 10
         VolumeType: gp2
-      ElasticsearchClusterConfig:
+      ClusterConfig:
         DedicatedMasterEnabled: false
         InstanceCount: 1
-        InstanceType: t3.small.elasticsearch
+        InstanceType: t3.small.search
         ZoneAwarenessEnabled: false
       DomainEndpointOptions:
         EnforceHTTPS: true
@@ -72,17 +72,17 @@ Resources:
       Code:
         S3Bucket:
           Fn::ImportValue: Ptt-Alertor-S3-Bucket-Name
-        S3Key: lambdas/delete_elasticsearch_indice.zip
-      Description: keep elasticsearch storage for free tier
+        S3Key: lambdas/delete_opensearch_indice.zip
+      Description: keep opensearch storage for free tier
       Environment:
         Variables:
           ELASTICSEARCH_ENDPOINT:
             Fn::GetAtt:
-              - PttAlertorElasticsearch
+              - PttAlertorOpenSearch
               - DomainEndpoint
           RETENTION_DAYS: 22
       FunctionName: Delete_ES_Indice
-      Handler: delete_elasticsearch_indice.lambda_handler
+      Handler: delete_opensearch_indice.lambda_handler
       Role:
         Fn::GetAtt:
           - LambdaBasicExecutionRole
@@ -115,7 +115,7 @@ Resources:
           - OnceADayScheduledRule
           - Arn
 
-  LambdaElasticsearchExecutionRole:
+  LambdaOpenSearchExecutionRole:
     Type: AWS::IAM::Role
     Properties:
       AssumeRolePolicyDocument:
@@ -126,7 +126,7 @@ Resources:
               Service: lambda.amazonaws.com
             Action: sts:AssumeRole
       Path: "/"
-      RoleName: lambda_elasticsearch_execution
+      RoleName: lambda_opensearch_execution
       Policies:
         - PolicyName: AmazonESFullAccess
           PolicyDocument:
@@ -137,32 +137,32 @@ Resources:
                 Effect: Allow
                 Resource: arn:aws:es:*:*:*
 
-  LambdaElasticsearchExecutionInstanceProfile:
+  LambdaOpenSearchExecutionInstanceProfile:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Path: "/"
       Roles:
-        - !Ref LambdaElasticsearchExecutionRole
+        - !Ref LambdaOpenSearchExecutionRole
 
-  LogsToElasticsearchLambda:
+  LogsToOpenSearchLambda:
     Type: AWS::Lambda::Function
     Properties:
       Code:
         S3Bucket:
           Fn::ImportValue: Ptt-Alertor-S3-Bucket-Name
-        S3Key: lambdas/logs_to_elasticsearch.zip
+        S3Key: lambdas/logs_to_opensearch.zip
       Description: CloudWatch Logs to Amazon ES streaming
       Environment:
         Variables:
           ELASTICSEARCH_ENDPOINT:
             Fn::GetAtt:
-              - PttAlertorElasticsearch
+              - PttAlertorOpenSearch
               - DomainEndpoint
-      FunctionName: LogsToElasticsearch
-      Handler: logs_to_elasticsearch.handler
+      FunctionName: LogsToOpenSearch
+      Handler: logs_to_opensearch.handler
       Role:
         Fn::GetAtt:
-          - LambdaElasticsearchExecutionRole
+          - LambdaOpenSearchExecutionRole
           - Arn
       Runtime: nodejs12.x
       Timeout: 60
@@ -170,7 +170,7 @@ Resources:
   PermissionForToInvokeLambda:
     Type: AWS::Lambda::Permission
     Properties:
-      FunctionName: !Ref LogsToElasticsearchLambda
+      FunctionName: !Ref LogsToOpenSearchLambda
       Action: lambda:InvokeFunction
       Principal: logs.amazonaws.com
       SourceArn:
@@ -184,19 +184,19 @@ Resources:
       FilterPattern: ""
       DestinationArn:
         Fn::GetAtt:
-          - LogsToElasticsearchLambda
+          - LogsToOpenSearchLambda
           - Arn
 
-  ElasticsearchFreeStorageSpaceAlarm:
+  OpenSearchFreeStorageSpaceAlarm:
     Type: AWS::CloudWatch::Alarm
     Properties:
       ActionsEnabled: true
-      AlarmName: Elasticsearch Storage Space Exhausted
+      AlarmName: OpenSearch Storage Space Exhausted
       AlarmDescription: clean command example, DELETE /cwl-2021.05.10
       Namespace: AWS/ES
       Dimensions:
         - Name: DomainName
-          Value: !Ref PttAlertorElasticsearch
+          Value: !Ref PttAlertorOpenSearch
         - Name: ClientId
           Value: !Ref "AWS::AccountId"
       MetricName: FreeStorageSpace
@@ -212,23 +212,23 @@ Resources:
         - Fn::ImportValue: Ptt-Alertor-SNS-Topic-Arn
 
 Outputs:
-  PttAlertorElasticsearchEndPoint:
+  PttAlertorOpenSearchEndPoint:
     Value:
       Fn::GetAtt:
-        - PttAlertorElasticsearch
+        - PttAlertorOpenSearch
         - DomainEndpoint
-    Description: EndPoint of PttAlertorElasticsearch
+    Description: EndPoint of PttAlertorOpenSearch
     Export:
-      Name: Ptt-Alertor-Elasticsearch-Endpoint
+      Name: Ptt-Alertor-OpenSearch-Endpoint
 
-  PttAlertorElasticsearchArn:
+  PttAlertorOpenSearchArn:
     Value:
       Fn::GetAtt:
-        - PttAlertorElasticsearch
+        - PttAlertorOpenSearch
         - DomainArn
-    Description: Arn of PttAlertorElasticsearch
+    Description: Arn of PttAlertorOpenSearch
     Export:
-      Name: Ptt-Alertor-Elasticsearch-Arn
+      Name: Ptt-Alertor-OpenSearch-Arn
 
   LambdaBasicExecuteRoleName:
     Value: !Ref LambdaBasicExecutionRole

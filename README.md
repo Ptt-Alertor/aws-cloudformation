@@ -36,9 +36,9 @@
     * [x] Certificate Approval
   * [x] cloudwatch
     * [x] copy dashboard source from console to `cloudwatch.yml`
-  * [x] elasticsearch
-    * [x] migrate elasticsearch and kibana setting
-    * [x] Update elasticsearch version
+  * [x] opensearch
+    * [x] migrate opensearch and kibana setting
+    * [x] Update opensearch version
 * [x] tag `initial` to initial environment
 * [x] migrate ptt-alertor
   * [x] service-ptt-alertor
