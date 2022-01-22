@@ -7,6 +7,27 @@ Resources:
       BucketName: ptt-alertor-2021-bucket
       VersioningConfiguration:
         Status: Enabled
+
+  PttAlertorS3BucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref PttAlertorS3Bucket
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action:
+              - "s3:GetObject"
+            Resource: !Sub ${PttAlertorS3Bucket.Arn}/assets/*
+            Principal: "*"
+
+  PttAlertorS3BucketSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: S3DomainName
+      Type: String
+      Value: !GetAtt PttAlertorS3Bucket.DomainName
+
 Outputs:
   Name:
     Value: !Ref PttAlertorS3Bucket
@@ -14,18 +35,12 @@ Outputs:
     Export:
       Name: Ptt-Alertor-S3-Bucket-Name
   Arn:
-    Value:
-      Fn::GetAtt:
-        - PttAlertorS3Bucket
-        - Arn
+    Value: !GetAtt PttAlertorS3Bucket.Arn
     Description: Arn of ptt-alertor-bucket
     Export:
       Name: Ptt-Alertor-S3-Bucket-Arn
   DomainName:
-    Value:
-      Fn::GetAtt:
-        - PttAlertorS3Bucket
-        - DomainName
+    Value: !GetAtt PttAlertorS3Bucket.DomainName
     Description: Domain Name of ptt-alertor-bucket
     Export:
       Name: Ptt-Alertor-S3-Bucket-Domain
