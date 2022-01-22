@@ -30,7 +30,7 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: IAM
-        run:
+        run: |
           aws cloudformation deploy --stack-name IAM --template-file iam/iam.yaml \
           --capabilities CAPABILITY_NAMED_IAM \
           --parameter-overrides DefaultPassword=${DEFAULT_PASSWORD}
@@ -58,7 +58,9 @@ jobs:
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name ECR --template-file ecr/ecr.yaml
 
       - name: Create Key Pair for ECS-Host
-        run: aws ec2 create-key-pair --key-name ecs
+        run: |
+          aws ec2 create-key-pair --key-name ecs > ecs-key.json
+          aws s3 cp ecs-key.json s3://ptt-alertor-2021-bucket/ecs-key.json
 
       - name: Redis
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name Redis --template-file redis/redis.yaml
