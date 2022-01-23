@@ -47,8 +47,8 @@
     * [x] update ECS Service's Number of tasks to 0
     * [x] docker stop container
   * [x] dynamodb
-    * [x] export to s3
-    * [x] use glue data pipeline to recover db in new account
+    * [x] create DynamoDBCrossAccessRole in old account and add new account in trust entity
+    * [x] use glue job to migrate db from old account to new account
   * [x] migrate redis db
   * [x] DNS change
   * [x] update [ptt-alertor](https://github.com/Ptt-Alertor/ptt-alertor) task definition

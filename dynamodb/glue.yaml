@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: Glue Migrate DynamoDB
+
+Parameters:
+  OldAccountId:
+    Type: String
+
+Resources:
+  ## Create in Old Account
+  # DynamoDBCrossAccessRole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     RoleName: DynamoDBCrossAccessRole
+  #     AssumeRolePolicyDocument:
+  #       Version: "2012-10-17"
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             AWS: "arn:aws:iam::${NewAccountId}:root"
+  #           Action: sts:AssumeRole
+  #     Path: "/"
+  #     ManagedPolicyArns:
+  #       - arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess
+
+  GlueMigrateDynamoDBRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: "glue.amazonaws.com"
+            Action: sts:AssumeRole
+      Policies:
+        - PolicyName: AssumeDynamoDBCrossAccessRole
+          PolicyDocument:
+            Version: "2012-10-17"
+            Statement:
+              - Effect: Allow
+                Action: sts:AssumeRole
+                Resource: !Sub arn:aws:iam::${OldAccountId}:role/DynamoDBCrossAccessRole
+      Path: "/"
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/CloudWatchLogsFullAccess
+        - arn:aws:iam::aws:policy/AmazonS3FullAccess
+        - arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess
+
+  GlueMigrateTableJob:
+    Type: AWS::Glue::Job
+    Properties:
+      Name: migrate-dynamodb
+      GlueVersion: 3.0
+      Command:
+        Name: glueetl
+        PythonVersion: 3
+        ScriptLocation: !Sub
+          - s3://${S3}/glue/migrate_dynamodb.py
+          - S3: !ImportValue Ptt-Alertor-S3-Bucket-Name
+      DefaultArguments:
+        "--job-bookmark-option": "job-bookmark-enable"
+        "--table_name": ""
+        "--role_arn": !Sub arn:aws:iam::${OldAccountId}:role/DynamoDBCrossAccessRole
+      Role: !Ref GlueMigrateDynamoDBRole
+      MaxCapacity: 2
