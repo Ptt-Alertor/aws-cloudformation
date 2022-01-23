@@ -17,8 +17,8 @@
                 "Principal": {"AWS": "222222222222"},
                 "Action": ["s3:ListBucket","s3:GetObject", "s3:GetObjectTagging"],
                 "Resource": [
-                    "arn:aws:s3:::ptt-alertor-2020-bucket/*",
-                    "arn:aws:s3:::ptt-alertor-2020-bucket"
+                    "arn:aws:s3:::ptt-alertor-2021-bucket/*",
+                    "arn:aws:s3:::ptt-alertor-2021-bucket"
                 ]
             }
         ]

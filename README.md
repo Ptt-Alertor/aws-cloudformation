@@ -37,7 +37,7 @@
   * [x] cloudwatch
     * [x] copy dashboard source from console to `cloudwatch.yml`
   * [x] opensearch
-    * [x] migrate opensearch and kibana setting
+    * [x] migrate opensearch and dashboard setting
     * [x] Update opensearch version
 * [x] tag `initial` to initial environment
 * [x] migrate ptt-alertor

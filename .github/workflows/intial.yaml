@@ -49,7 +49,7 @@ jobs:
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name S3 --template-file s3/s3.yaml
 
       - name: Migrate S3 from Old Account
-        run: aws s3 sync s3://ptt-alertor-2020-bucket s3://ptt-alertor-2021-bucket
+        run: aws s3 sync s3://ptt-alertor-2021-bucket s3://ptt-alertor-2022-bucket
 
       - name: VPC
         run: aws cloudformation deploy --capabilities CAPABILITY_NAMED_IAM --stack-name VPC --template-file vpc/vpc.yaml
