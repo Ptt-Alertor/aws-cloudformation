@@ -51,6 +51,8 @@ Resources:
     Properties:
       Name: migrate-dynamodb
       GlueVersion: 3.0
+      ExecutionProperty:
+        MaxConcurrentRuns: 2
       Command:
         Name: glueetl
         PythonVersion: 3
