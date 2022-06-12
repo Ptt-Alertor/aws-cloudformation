@@ -127,15 +127,9 @@ Resources:
             Action: sts:AssumeRole
       Path: "/"
       RoleName: lambda_opensearch_execution
-      Policies:
-        - PolicyName: AmazonESFullAccess
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Action:
-                  - es:*
-                Effect: Allow
-                Resource: arn:aws:es:*:*:*
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonOpenSearchServiceFullAccess
 
   LambdaOpenSearchExecutionInstanceProfile:
     Type: AWS::IAM::InstanceProfile
